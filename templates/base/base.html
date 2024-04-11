@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>LUGGA</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            *{
+                margin: 0;
+                padding: 0;   
+                box-sizing: border-box;
+           }
+           body{
+               font-family: 'Poppins', sans-serif;
+           }
+           .navbar{
+                margin-bottom: 0px;
+               display: flex;
+               align-items: center;
+               pad: 20px;
+               background-color:  #000000;
+               color: white;
+           }
+           nav{
+               flex: 1;
+               text-align: right;
+           }
+           nav ul{
+               display: inline-block;
+               list-style-type: none;
+           }
+           nav ul li{
+                display: inline-block;
+                margin-right: 20px;
+                color: white;
+           }
+
+           a{
+               text-decoration: none;
+               color: white;
+           }
+
+           p{
+            color: white;
+               
+           }
+
+            .links-container{
+                margin-bottom: -71px;
+                width: 100%;
+                display: flex;
+                padding: 10px 10vw;
+                justify-content: center;
+                list-style: none;
+                border-top: 1px solid #d1d1d1;
+            }
+            
+            .link{
+                text-transform: capitalize;
+                padding: 0 10px;
+                margin: 0 5px;
+                text-decoration: none;
+                color: #383838;
+                opacity: 0.5;
+                transition: .5s;
+            }
+            
+            .link:hover{
+                opacity: 1;
+            }
+
+            .container-input {
+                position: relative;
+                margin-left: 155px;
+              }
+              
+              .input {
+                width: 150px;
+                padding: 10px 0px 10px 40px;
+                border-radius: 9999px;
+                border: solid 1px #333;
+                transition: all .2s ease-in-out;
+                outline: none;
+                opacity: 0.8;
+              }
+              
+              .container-input svg {
+                position: absolute;
+                top: 50%;
+                left: 10px;
+                transform: translate(0, -50%);
+              }
+              
+              .input:focus {
+                opacity: 1;
+                width: 250px;
+              }
+              .count-cart {
+                position: relative;
+                display: inline-block;
+                padding: 5px 10px;
+                border-radius: 50%;
+                background-color: white;
+                color: black;
+            }
+            .count-cart span {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+            .count{
+                margin-bottom:20px;
+                margin-right: 51px;
+            }
+        </style>
+        <div class="navbar">
+            <div class="logo">
+                
+                <img src="/media/product/1__1_-removebg-preview.png" width="150px"> 
+            </div>
+            <div class="container-input">
+                <input type="text" placeholder="Search" name="text" class="input">
+                <svg fill="#000000" width="20px" height="20px" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M790.588 1468.235c-373.722 0-677.647-303.924-677.647-677.647 0-373.722 303.925-677.647 677.647-677.647 373.723 0 677.647 303.925 677.647 677.647 0 373.723-303.924 677.647-677.647 677.647Zm596.781-160.715c120.396-138.692 193.807-319.285 193.807-516.932C1581.176 354.748 1226.428 0 790.588 0S0 354.748 0 790.588s354.748 790.588 790.588 790.588c197.647 0 378.24-73.411 516.932-193.807l516.028 516.142 79.963-79.963-516.142-516.028Z" fill-rule="evenodd"></path>
+              </svg>
+              </div>
+            <nav>                  
+                <ul>
+                    <li><a href="{% url 'index' %}">Home</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a  href='{% url 'register' %}'>Account</a></li>
+                </ul>
+            </nav>
+            <div class="count_cart">
+                <a href="{% url 'cart' %}">
+            <img src="/media/product/2-removebg-preview.png" width="60px" height="60px">
+            <span class="count">{{ request.user.profile.get_cart_count }}</span>
+
+            
+            </div>
+        </div>  
+        {% comment %} <ul class="links-container">
+            <li class="link-item"><a href="#" class="link">home</a></li>
+            <li class="link-item"><a href="#" class="link">women</a></li>
+            <li class="link-item"><a href="#" class="link">men</a></li>
+            <li class="link-item"><a href="#" class="link">kids</a></li>
+            <li class="link-item"><a href="#" class="link">accessories</a></li>
+        </ul>  {% endcomment %}
+
+       {% block start %}
+
+
+       {% endblock %}
+    </body>
+</html>

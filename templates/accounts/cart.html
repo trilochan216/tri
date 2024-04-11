@@ -1,0 +1,134 @@
+{% extends 'base/base.html'%}
+
+{% block start %}
+
+<style>
+
+        /* ---cart----- */
+    
+    
+    .cart-page{
+        color: black;
+        margin: 80px auto;
+        width: 80%;
+    
+    }
+    table{
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .cart-info{
+        display: flex;
+        flex-wrap: wrap;
+    }
+    th{
+        text-align: left;
+        padding: 5px;
+        color: #fff;
+        background: #ff523b;
+    }
+    
+    td {
+        padding: 10px 5px;
+    }
+    td input{
+        width: 40px;
+        height: 30px;
+        padding: 5px;
+    }
+    td a{
+        color: #ff523b;
+        font-size: 12px;
+    }
+    td img{
+        width: 80px;
+        height: 80px;
+        margin-right: 10px;
+    }
+    .total-price{
+        display: flex;
+        justify-content: flex-end;
+    }
+    .total-price table{
+        border-top: 3px solid #ff523b;
+        width: 100%;
+        max-width: 400px;
+    }
+    td:last-child{
+        text-align: right;
+    }
+    th:last-child{
+        text-align: right;
+    }
+        .checkout-btn {
+            margin-left: 972px;
+            margin-top: 49px;
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: black;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: box-shadow 0.3s ease;
+        }
+    
+        .checkout-btn:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+    
+</style>
+
+<div class="small-container cart-page">
+    <table> 
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+        </tr>
+        {% for cart_item in cart.cart_items.all %}
+        <tr>
+            <td> 
+                <div class="cart-info"> 
+                    <img src="/media/{{ cart_item.product_images.first.image }}" >
+                    <div> 
+                        <p>{{ cart_item.product.product_name }}</p>
+                        <br>
+                        {% if cart_item.size_variant %}
+                        <p>SIZE: {{ cart_item.size_variant.size_name }}</p>
+                        {% endif %}
+                        <br>
+                        {% comment %} <a href="{% url 'remove_cart' cart_item.uid %}">Remove</a> {% endcomment %}
+                    </div>
+                </div>
+            </td>
+            <td><input type="number" value="1"></td>
+            <td>Rs {{ cart_item.get_product_price }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="total-price">
+        <table> 
+            <tr>
+                <td>Subtotal</td>
+                <td>$120.00</td>
+            </tr>
+            <tr>
+                <td>Tax</td>
+                <td>$5.00</td>
+            </tr>
+            <tr>
+                <td>Total</td>
+                <td>Rs {{ cart.cart_items.get_cart_total }}</td>
+            </tr>
+        </table>
+    </div>
+    <a href="#" class="checkout-btn">Checkout</a>
+</div>
+
+{% endblock %}
