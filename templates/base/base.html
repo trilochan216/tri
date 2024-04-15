@@ -28,6 +28,7 @@
            nav{
                flex: 1;
                text-align: right;
+               margin-right: 65px;
            }
            nav ul{
                display: inline-block;
@@ -99,24 +100,59 @@
                 opacity: 1;
                 width: 250px;
               }
-              .count-cart {
-                position: relative;
-                display: inline-block;
-                padding: 5px 10px;
-                border-radius: 50%;
-                background-color: white;
-                color: black;
-            }
+            
             .count-cart span {
                 position: absolute;
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
             }
-            .count{
+
+            .count_cart {
+                position: fixed;
+                top: 42px;
+                right: 20px;
+                width: 60px; /* Adjust as needed */
+                height: 60px; /* Adjust as needed */
+                background-color: black;
+                border-radius: 50%;
+                text-align: center;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                z-index: 1000; /* Ensure it's above other content */
+            }
+            
+            .count_cart a {
+                display: block;
+                width: 100%;
+                height: 100%;
+                text-decoration: none;
+                color: inherit;
+            }
+            
+            .count_cart img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Ensure the image covers the entire space */
+            }
+            
+            .count_cart .count {
                 margin-bottom:20px;
                 margin-right: 51px;
+                position: absolute;
+                top: 0px;
+                right: -48px;
+                background-color: red;
+                color: white;
+                font-size: 14px;
+                padding: 4px;
+                border-radius: 50%;
+                min-width: 20px;
+                text-align: center;
             }
+            .count_cart{
+                display:flex;
+            }
+            
         </style>
         <div class="navbar">
             <div class="logo">
@@ -140,11 +176,11 @@
             </nav>
             <div class="count_cart">
                 <a href="{% url 'cart' %}">
-            <img src="/media/product/2-removebg-preview.png" width="60px" height="60px">
-            <span class="count">{{ request.user.profile.get_cart_count }}</span>
-
-            
+                    <img src="/media/product/2-removebg-preview.png" width="60px" height="60px">
+                    <span class="count">{{ request.user.profile.get_cart_count }}</span>
+                </a>
             </div>
+            
         </div>  
         {% comment %} <ul class="links-container">
             <li class="link-item"><a href="#" class="link">home</a></li>

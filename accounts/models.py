@@ -20,7 +20,7 @@ class Profile(BaseModel):
 
     
 class Cart(BaseModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='carts' )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='carts')
     coupon = models.ForeignKey(Coupon, on_delete= models.SET_NULL,null= True, blank=True )
     is_paid = models.BooleanField(default=False)
     
@@ -36,12 +36,11 @@ class Cart(BaseModel):
                 size_variant_price = cart_item.size_variant.price
                 price.append(size_variant_price)
                 
-        print(price)
         return sum(price)
     
 
 class CartItems(BaseModel):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cart_items' )
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cart_items')
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True )
     color_variant = models.ForeignKey(ColorVariant, on_delete=models.SET_NULL, null= True, blank=True )
     size_variant = models.ForeignKey(SizeVariant, on_delete=models.SET_NULL, null= True, blank=True )

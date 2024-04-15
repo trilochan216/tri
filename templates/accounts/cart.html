@@ -1,7 +1,6 @@
-{% extends 'base/base.html'%}
+{% extends 'base/base.html' %}
 
 {% block start %}
-
 <style>
 
         /* ---cart----- */
@@ -90,11 +89,12 @@
             <th>Quantity</th>
             <th>Subtotal</th>
         </tr>
-        {% for cart_item in cart.cart_items.all %}
+
+        {% for cart_item in cart %}
         <tr>
-            <td> 
+            <td>     
                 <div class="cart-info"> 
-                    <img src="/media/{{ cart_item.product_images.first.image }}" >
+                    <img src="/media/{{ cart_item.products.product_images.first.image}}" >
                     <div> 
                         <p>{{ cart_item.product.product_name }}</p>
                         <br>
@@ -102,7 +102,7 @@
                         <p>SIZE: {{ cart_item.size_variant.size_name }}</p>
                         {% endif %}
                         <br>
-                        {% comment %} <a href="{% url 'remove_cart' cart_item.uid %}">Remove</a> {% endcomment %}
+                        <a href="{% url 'remove_cart' cart_item.uid %}" >Remove</a> 
                     </div>
                 </div>
             </td>
@@ -115,20 +115,12 @@
     <div class="total-price">
         <table> 
             <tr>
-                <td>Subtotal</td>
-                <td>$120.00</td>
-            </tr>
-            <tr>
-                <td>Tax</td>
-                <td>$5.00</td>
-            </tr>
-            <tr>
                 <td>Total</td>
-                <td>Rs {{ cart.cart_items.get_cart_total }}</td>
+                <td>Rs {{ cart.get_cart_total }}</td>
             </tr>
         </table>
     </div>
     <a href="#" class="checkout-btn">Checkout</a>
 </div>
-
 {% endblock %}
+

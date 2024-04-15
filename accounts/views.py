@@ -111,4 +111,6 @@ def remove_cart(request, cart_item_uid):
     
 def cart(request):
     context = {'cart': Cart.objects.filter(is_paid=False, user= request.user)}
+    if request.method == 'POST':
+        pass
     return render(request, 'accounts/cart.html' , context)
