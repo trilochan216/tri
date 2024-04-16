@@ -142,17 +142,8 @@ STATIC_URL = '/static/'
 
 
 
-AUTHENTICATION_BACKENDS = [
-    # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
 
-    # `allauth` specific authentication methods, such as login by email
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
-
-
-
-SITE_ID =1
+SITE_ID =2
   # Adjust 'home' to your app name
 MEDIA_URL = '/media/'
 
@@ -193,3 +184,16 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'lugga.nepal@gmail.com'
 EMAIL_HOST_PASSWORD = 'pghw mpjx yugd lvst'
 EMAIL_USE_SSL = False
+
+
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+LOGIN_REDIRECT_URL = '/'  # or the URL you want users to be redirected to after login
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'  # or the URL you want users to be redirected to after logout

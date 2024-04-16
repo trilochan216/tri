@@ -87,15 +87,10 @@
             <input type="submit" value="Login">
         </form>
         <div class="social-login">
-            <button class="facebook-login">Login with Facebook</button>
+            {% load socialaccount %}
+            <a href='{% provider_login_url "google" %}?next=/'>
             <button  id="google-login" class="google-login">Login with Google</button>
+            </a>
         </div>
     </div>
-    <script>
-        // Add an event listener to the button
-        document.getElementById('google-login').addEventListener('click', function() {
-            // Redirect the user to the Google authentication page
-            window.location.href = "/google/login/";
-        });
-    </script>
 {% endblock %} 
