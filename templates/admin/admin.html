@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> 
+  <link href="admin.css" rel="stylesheet">
+</head>
+<body>
+  <div class="sidebar">
+    <h2><span class="admin-color">Admin</span> <span class="panel-color">Panel</span></h2>
+    <ul>
+        <li><a href="#" class="active" id="dashboardLink"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="#" id="usersLink"><i class="fas fa-users"></i> Users</a></li>
+        <li><a href="#" id="sellersLink"><i class="fas fa-link"></i> Sellers</a></li>
+        <li><a href="#" id="productsLink"><i class="fas fa-tshirt"></i> Products</a></li>
+        <li><a href="#" id="teamsLink"><i class="fas fa-users"></i> Our Teams</a></li> 
+        <li><a href="#"><i class="fas fa-link"></i> Settings</a></li>
+    </ul>
+ </div>
+  <div class="container mt-4 ml-5" id="dashboardSection">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Total Sales</h5>
+            <p class="card-text">$12,00,000</p>
+            <a href="#" class="btn btn-primary">Check Out</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Total Orders</h5>
+            <p class="card-text">50</p>
+            <a href="#" class="btn btn-primary">Check Out</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Total Products</h5>
+            <p class="card-text">82</p>
+            <a href="#" class="btn btn-primary">Check Out</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <h2>Recent Orders</h2>
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Order ID</th>
+              <th scope="col">Customer Name</th>
+              <th scope="col">Order Date</th>
+              <th scope="col">Email</th>
+              <th scope="col">Total Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Sample data, replace with dynamic data -->
+            <tr>
+              <th scope="row">1</th>
+              <td>John Doe</td>
+              <td>2024-04-01</td>
+              <td>john@example.com</td>
+              <td>$100</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Jane Smith</td>
+              <td>2024-04-02</td>
+              <td>jane@example.com</td>
+              <td>$150</td>
+            </tr>
+            <!-- More rows here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- User table, initially hidden -->
+  <div id="usersSection" style="display: none;">
+    <div class="container mt-4 ml-5">
+      <div class="row">
+        <div class="col-md-12">
+          <h2>Recent Users</h2>
+          <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">User ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Contact Number</th>
+                <th scope="col">Date of joined</th>
+                <th scope="col">Actions</th> <!-- New column for delete buttons -->
+              </tr>
+            </thead>
+            <tbody id="userTableBody"> <!-- Added ID for tbody to manipulate it via JavaScript -->
+              <!-- Sample data, replace with dynamic data -->
+              <tr>
+                <th scope="row">1</th>
+                <td>Mohommad Samrose</td>
+                <td>example.com</td>
+                <td>+2356457631</td>
+                <td>21st December,2023</td>
+                <td><button class="btn btn-danger delete-user-btn">Delete</button></td> <!-- Delete button added -->
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Ishaan Pudasaini</td>
+                <td>jane@example.com</td>
+                <td>+2356457631</td>
+                <td>21st December,2023</td>
+                <td><button class="btn btn-danger delete-user-btn">Delete</button></td>
+
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Ankit Kunwar</td>
+                <td>@example.com</td>
+                <td>+2356457631</td>
+                <td>21st December,2023</td>
+                <td><button class="btn btn-danger delete-user-btn">Delete</button></td>
+              </tr>
+              <tr>
+                <th scope="row">4</th>
+                <td>Aakassh Chhetri</td>
+                <td>@example.com</td>
+                <td>+2356457631</td>
+                <td>21st December,2023</td>
+                <td><button class="btn btn-danger delete-user-btn">Delete</button></td>
+              </tr>
+              <tr>
+                <th scope="row">5</th>
+                <td>Prajwal Shrestha</td>
+                <td>@example.com</td>
+                <td>+2356457631</td>
+                <td>21st December,2023</td>
+                <td><button class="btn btn-danger delete-user-btn">Delete</button></td>
+              </tr>
+              
+              <!-- More rows here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Add and delete buttons for users, initially hidden -->
+  <div id="userButtons" style="display: none;">
+    <div class="container mt-4 ml-5">
+      <div class="row">
+        <div class="col-md-12">
+          <button class="btn btn-primary" id="addUserBtn">Add User</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addUserModalLabel">Add User</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="addUserForm">
+              <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" id="name" required>
+              </div>
+              <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" required>
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone Number:</label>
+                <input type="tel" class="form-control" id="phone" required>
+              </div>
+              <div class="form-group">
+                <label for="location">Location:</label>
+                <input type="text" class="form-control" id="location" required>
+              </div>
+              <div class="form-group">
+                <label for="dateJoined">Date of Joined:</label>
+                <input type="date" class="form-control" id="dateJoined" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Add User</button>
+            </form>
+          </div>
+        </div>
+        </div>
+        </div>
+  </div>
+
+  <!-- Seller table, initially hidden -->
+  <div id="sellersSection" style="display: none;">
+    <div class="container mt-4 ml-5">
+      <div class="row">
+        <div class="col-md-12">
+          <h2>Recent Sellers</h2>
+          <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Seller ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Contact Number</th>
+                <th scope="col">Date of Joined</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Sample data, replace with dynamic data -->
+              <tr>
+                <th scope="row">1</th>
+                <td>Mohommad Samrose</td>
+                <td>example.com</td>
+                <td>+2356457631</td>
+                <td>21st December,2023</td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Ishaan Pudasaini</td>
+                <td>jane@example.com</td>
+                <td>+2356457631</td>
+                <td>21st December,2023</td>
+
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Ankit Kunwar</td>
+                <td>@example.com</td>
+                <td>+2356457631</td>
+                <td>21st December,2023</td>
+              </tr>
+              <tr>
+                <th scope="row">4</th>
+                <td>Aakassh Chhetri</td>
+                <td>@example.com</td>
+                <td>+2356457631</td>
+                <td>21st December,2023</td>
+              </tr>
+              <tr>
+                <th scope="row">5</th>
+                <td>Prajwal Shrestha</td>
+                <td>@example.com</td>
+                <td>+2356457631</td>
+                <td>21st December,2023</td>
+              </tr>
+              <!-- Mor-->
+            </tbody>
+          </table>
+          <button class="btn btn-primary" id="addUserBtn" data-toggle="modal" data-target="#addUserModal">Add User</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Add and delete buttons for sellers, initially hidden -->
+  <div id="sellerButtons" style="display: none;">
+    <div class="container mt-4 ml-5">
+      <div class="row">
+        <div class="col-md-12">
+          <button class="btn btn-primary" id="addSellerBtn">Add Seller</button>
+          <button class="btn btn-danger ml-2" id="deleteSellerBtn">Delete Seller</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products table, initially hidden -->
+  <div id="productsSection" style="display: none;">
+    <div class="container mt-4 ml-5">
+      <div class="row">
+        <div class="col-md-12">
+          <h2>Top Selling Products</h2>
+          <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Product ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Sales</th>
+                <th scope="col">Price</th>
+                <th scope="col">Image</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Sample data, replace with dynamic data -->
+              <tr>
+                <th scope="row">1</th>
+                <td>Product 1</td>
+                <td>1000</td>
+                <td>$50</td>
+                <td><img src="product1.jpg" alt="Product 1" style="width: 50px; height: 50px;"></td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Product 2</td>
+                <td>800</td>
+                <td>$40</td>
+                <td><img src="product2.jpg" alt="Product 2" style="width: 50px; height: 50px;"></td>
+              </tr>
+              <!-- More rows here -->
+            </tbody>
+          </table>
+          <h2>Less Selling Products</h2>
+          <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Product ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Sales</th>
+                <th scope="col">Price</th>
+                <th scope="col">Image</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Sample data, replace with dynamic data -->
+              <tr>
+                <th scope="row">3</th>
+                <td>Product 3</td>
+                <td>200</td>
+                <td>$60</td>
+                <td><img src="product3.jpg" alt="Product 3" style="width: 50px; height: 50px;"></td>
+              </tr>
+              <tr>
+                <th scope="row">4</th>
+                <td>Product 4</td>
+                <td>300</td>
+                <td>$70</td>
+                <td><img src="product4.jpg" alt="Product 4" style="width: 50px; height: 50px;"></td>
+              </tr>
+              <!-- More rows here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Add and delete buttons for products, initially hidden -->
+  <div id="productButtons" style="display: none;">
+    <div class="container mt-4 ml-5">
+      <div class="row">
+        <div class="col-md-12">
+          <button class="btn btn-primary" id="addProductBtn">Add Product</button>
+          <button class="btn btn-danger ml-2" id="deleteProductBtn">Delete Product</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Teams section, initially hidden -->
+<div id="teamsSection" style="display: none;">
+  <div class="container mt-4 ml-5">
+    <!-- <h2 id="Ram">Our Teams</h2> -->
+    <div class="row">
+      <!-- Member 1 -->
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <img src="" class="card-img-top" alt="Team Member 1">
+          <div class="card-body">
+            <h5 class="card-title">Ruben Karki</h5>
+            <p class="card-text">Position: ----</p>
+            <p class="card-text">Email: @example.com</p>
+            <p class="card-text">Phone: +1234567890</p>
+          </div>
+        </div>
+      </div>
+      <!-- Member 2 -->
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <img src=".vscode/Aakash.jpg" class="card-img-top" alt="Team Member 2">
+          <div class="card-body">
+            <h5 class="card-title">Aakash Chhetri/h5>
+            <p class="card-text">Position:-----</p>
+            <p class="card-text">Email: j@example.com</p>
+            <p class="card-text">Phone: +0987654321</p>
+          </div>
+        </div>
+      </div>
+      <!-- Member 3 -->
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <img src="team_member3.jpg" class="card-img-top" alt="Team Member 3">
+          <div class="card-body">
+            <h5 class="card-title">Sabin Giri</h5>
+            <p class="card-text">Position: -----/p>
+            <p class="card-text">Email: @example.com</p>
+            <p class="card-text">Phone: +9876543210</p>
+          </div>
+        </div>
+      </div>
+      <!-- Member 4 -->
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <img src="team_member4.jpg" class="card-img-top" alt="Team Member 4">
+          <div class="card-body">
+            <h5 class="card-title">Trilochan Dhami</h5>
+            <p class="card-text">Position: ------</p>
+            <p class="card-text">Email: @example.com</p>
+            <p class="card-text">Phone: +1234509876</p>
+          </div>
+        </div>
+      </div>
+      <!-- Member 5 -->
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <img src="team_member5.jpg" class="card-img-top" alt="Team Member 5">
+          <div class="card-body">
+            <h5 class="card-title">Prabesh Puri</h5>
+            <p class="card-text">Position: ------</p>
+            <p class="card-text">Email: @example.com</p>
+            <p class="card-text">Phone: +9876541230</p>
+          </div>
+        </div>
+      </div>
+      <!-- Member 6 -->
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <img src="team_member6.jpg" class="card-img-top" alt="Team Member 6">
+          <div class="card-body">
+            <h5 class="card-title">Suman Paudel</h5>
+            <p class="card-text">Position: ------</p>
+            <p class="card-text">Email: @example.com</p>
+            <p class="card-text">Phone: +1234598760</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+  // JavaScript to toggle visibility of sections and buttons when links are clicked
+  document.getElementById("usersLink").addEventListener("click", function() {
+    toggleSections("users");
+  });
+
+  document.getElementById("sellersLink").addEventListener("click", function() {
+    toggleSections("sellers");
+  });
+
+  document.getElementById("productsLink").addEventListener("click", function() {
+    toggleSections("products");
+  });
+
+  document.getElementById("teamsLink").addEventListener("click", function() {
+    toggleSections("teams");
+  });
+
+  // Function to toggle visibility of sections and buttons
+  function toggleSections(section) {
+    document.getElementById("dashboardSection").style.display = (section === "dashboard") ? "block" : "none";
+    document.getElementById("usersSection").style.display = (section === "users") ? "block" : "none";
+    document.getElementById("userButtons").style.display = (section === "users") ? "block" : "none";
+    document.getElementById("sellersSection").style.display = (section === "sellers") ? "block" : "none";
+    document.getElementById("sellerButtons").style.display = (section === "sellers") ? "block" : "none";
+    document.getElementById("productsSection").style.display = (section === "products") ? "block" : "none";
+    document.getElementById("productButtons").style.display = (section === "products") ? "block" : "none";
+    document.getElementById("teamsSection").style.display = (section === "teams") ? "block" : "none";
+  }
+  // Add event listeners for delete buttons
+  document.querySelectorAll('.delete-user-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      const row = button.closest('tr');
+      const userId = row.querySelector('th').textContent;
+      // Send a request to delete user with userId and remove the row on success
+      // Example:
+      // fetch(`/deleteUser/${userId}`, {
+      //   method: 'DELETE'
+      // })
+      // .then(response => {
+      //   if (response.ok) {
+      //     row.remove();
+      //   } else {
+      //     // Handle error
+      //   }
+      // })
+      // .catch(error => console.error('Error:', error));
+      row.remove(); // For demonstration purpose, remove the row directly without actual deletion
+    });
+  });
+  // JavaScript to handle form submission in the modal
+document.getElementById("addUserForm").addEventListener("submit", function(event) {
+  event.preventDefault(); // Prevent the default form submission
+
+  // Get the input values
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const phone = document.getElementById("phone").value;
+  const location = document.getElementById("location").value;
+  const dateJoined = document.getElementById("dateJoined").value;
+
+  // Generate the new user ID based on the last user ID in the table
+  const tableBody = document.getElementById("userTableBody");
+  const lastRow = tableBody.rows[tableBody.rows.length - 1];
+  const lastUserId = parseInt(lastRow.cells[0].textContent);
+  const newUserId = lastUserId + 1;
+
+  // Create a new row with the input values
+  const newUserRow = document.createElement("tr");
+  newUserRow.innerHTML = `
+    <th scope="row">${newUserId}</th>
+    <td>${name}</td>
+    <td>${email}</td>
+    <td>${phone}</td>
+    <td>${dateJoined}</td>
+  `;
+  tableBody.appendChild(newUserRow);
+
+  // Close the modal
+  $('#addUserModal').modal('hide');
+
+  // Reset the form fields
+  document.getElementById("addUserForm").reset();
+});
+  // JavaScript to handle form submission in the modal
+  document.getElementById("addUserForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Get the input values
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const phone = document.getElementById("phone").value;
+    const location = document.getElementById("location").value;
+    const dateJoined = document.getElementById("dateJoined").value;
+
+    // Generate the new user ID based on the last user ID in the table
+    const tableBody = document.getElementById("userTableBody");
+    const lastRow = tableBody.rows[tableBody.rows.length - 1];
+    const lastUserId = parseInt(lastRow.cells[0].textContent);
+    const newUserId = lastUserId + 1;
+
+    // Create a new row with the input values
+    const newUserRow = document.createElement("tr");
+    newUserRow.innerHTML = `
+      <th scope="row">${newUserId}</th>
+      <td>${name}</td>
+      <td>${email}</td>
+      <td>${phone}</td>
+      <td>${dateJoined}</td>
+    `;
+    tableBody.appendChild(newUserRow);
+
+    // Close the modal
+    $('#addUserModal').modal('hide');
+
+    // Reset the form fields
+    document.getElementById("addUserForm").reset();
+  });
+
+
+</script>  
+<style>
+    /* Custom CSS for Admin Dashboard */
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #5412e3bd;
+  color: #fff;
+  padding: 20px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+  transition: width 0.3s; 
+}
+
+.sidebar h2 {
+  margin-bottom: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+  color: #fff;
+  text-decoration: none;
+  display: block;
+  padding: 10px;
+  transition: background-color 0.3s;
+}
+
+.sidebar ul li a:hover {
+  background-color: #165aa2c6;
+}
+
+/* Active link style */
+.sidebar ul li a.active {
+  background-color: #007bff;
+}
+
+/* Style the three boxes */
+.card {
+  margin-bottom: 20px;
+}
+.card-title{
+  text-align: center;
+  color: rebeccapurple;
+  font-size: 30px; 
+  font-family: Arial, sans-serif; 
+}
+.card-text{
+  font-size: 20px; 
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  margin-left: 10px;
+
+}
+/* Style table header */
+.table thead th {
+  text-align: center;
+  background-color: rgb(7, 244, 188);
+}
+
+/* Style table data */
+.table tbody td {
+  vertical-align: middle;
+}
+
+/* Responsive table */
+@media (max-width: 767px) {
+  .table-responsive {
+    overflow-x: auto;
+  }
+}
+
+/* Adjust table font size for smaller screens */
+@media (max-width: 575px) {
+  .table td, .table th {
+    font-size: 12px;
+  }
+}
+.container mt-4 ml-5{
+  width: 100px;
+  text-align: center;
+  margin-left:35px;
+
+}
+.row {
+  display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -100px;
+    margin-left: 206px;
+}
+.card-img-top{
+  padding: 20px;
+  margin: 10px;
+}
+.ram{
+  position: center;
+} 
+</style>
+</body>
+</html>
