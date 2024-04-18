@@ -6,11 +6,10 @@ from products.models import *
 # Create your views here.
 
 def get_product(request, slug):
-    
-    print("*******")
-    print(request.user)
-    print("*******")
-    print(request.user.profile.get_cart_count)
+    # print("*******")
+    # print(request.user)
+    # print("*******")
+    # print(request.user.profile.get_cart_count)
     try:
         product = Product.objects.get(slug =slug)
         context = {'product': product}
