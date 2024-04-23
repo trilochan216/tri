@@ -93,7 +93,6 @@ def add_to_cart(request, uid):
         cart_item.save()
         
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-     
 
 
 def remove_cart(request, cart_item_uid):
@@ -106,11 +105,68 @@ def remove_cart(request, cart_item_uid):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
     
+# def cart(request):
+#     context = {'cart': Cart.objects.filter(is_paid=False, user= request.user)}
+#     if request.method == 'POST':
+#         pass
+#     return render(request, 'accounts/cart.html' , context)
+
+@login_required
+def cart(request):
+    # Fetch the cart for the current user that hasn't been paid for
+    cart = Cart.objects.filter(is_paid=False, user=request.user).first()  # Only get the first cart
+    cart_obj = Cart.objects.get(is_paid=False, user= request.user)
+    
+    if cart:
+        cart_items = cart.cart_items.all()  # Get all items in the cart
+        cart_total = cart.get_cart_total()  # Get the total price of the cart
+    else:
+        cart_items = []  # No items if no cart
+        cart_total = 0
+
+    context = {
+        'cart_items': cart_items,
+        'cart_total': cart_total,
+        'cart_obj': cart_obj,
+    }
+    
+    if request.method == 'POST':
+        coupon = request.POST.get('coupon')
+        coupon_obj = Coupon.objects.filter(coupon_code__icontains = coupon)
+        
+        if not coupon_obj.exists():
+            messages.warning(request, 'Invalid Coupon.')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        
+        if cart_obj.coupon:
+            messages.warning(request, 'coupon already exists.')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))   
+        
+        if cart_obj.get_cart_total() < coupon_obj[0].minimum_amount:
+            messages.warning(request, f'Amount should be greated then {coupon_obj[0].minimum_amount}.')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        
+        
+        if coupon_obj[0].is_expired:
+            messages.warning(request, "coupon Expired")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))    
+        
+        cart_obj.coupon = coupon_obj[0]
+        cart_obj.save()
+        messages.success(request, 'coupon applied.')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))   
+        
+    return render(request, 'accounts/cart.html', context)
+
+
+def remove_coupon(request, cart_id):
+    cart = Cart.objects.get(uid = cart_id)
+    cart.coupon = None
+    cart.save()
+    messages.success(request, 'coupon Removed.')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER')) 
+
+
+
 
  
-    
-def cart(request):
-    context = {'cart': Cart.objects.filter(is_paid=False, user= request.user)}
-    if request.method == 'POST':
-        pass
-    return render(request, 'accounts/cart.html' , context)
