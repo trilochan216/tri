@@ -5,19 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> 
-  <link href="admin.css" rel="stylesheet">
 </head>
 <body>
   <div class="sidebar">
     <h2><span class="admin-color">Admin</span> <span class="panel-color">Panel</span></h2>
     <ul>
         <li><a href="#" class="active" id="dashboardLink"><i class="fas fa-home"></i> Dashboard</a></li>
-        <li><a href="#" id="usersLink"><i class="fas fa-users"></i> Users</a></li>
-        <li><a href="#" id="sellersLink"><i class="fas fa-link"></i> Sellers</a></li>
-        <li><a href="#" id="productsLink"><i class="fas fa-tshirt"></i> Products</a></li>
-        <li><a href="#" id="teamsLink"><i class="fas fa-users"></i> Our Teams</a></li> 
-        <li><a href="#"><i class="fas fa-link"></i> Settings</a></li>
-    </ul>
+        <li><a href="#" id="usersLink"><i class="users"></i> Users</a></li>
+        <li><a href="#" id="sellersLink"><i class="link"></i> Sellers</a></li>
+        <li><a href="#" id="productsLink"><i class="tshirt"></i> Products</a></li>
+        <li><a href="#" id="teamsLink"><i class="users"></i> Our Teams</a></li> 
+        <br>
+        <br>
+        <br>
+        <li><a href="{% url 'admin_logout' %}"><i class="fas fa-link"></i>Logout</a></li>
  </div>
   <div class="container mt-4 ml-5" id="dashboardSection">
     <div class="row">
@@ -99,53 +100,19 @@
                 <th scope="col">Email</th>
                 <th scope="col">Contact Number</th>
                 <th scope="col">Date of joined</th>
-                <th scope="col">Actions</th> <!-- New column for delete buttons -->
+
               </tr>
             </thead>
             <tbody id="userTableBody"> <!-- Added ID for tbody to manipulate it via JavaScript -->
               <!-- Sample data, replace with dynamic data -->
               <tr>
                 <th scope="row">1</th>
-                <td>Mohommad Samrose</td>
+                <td>Ram Bahadur</td>
                 <td>example.com</td>
                 <td>+2356457631</td>
                 <td>21st December,2023</td>
-                <td><button class="btn btn-danger delete-user-btn">Delete</button></td> <!-- Delete button added -->
               </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Ishaan Pudasaini</td>
-                <td>jane@example.com</td>
-                <td>+2356457631</td>
-                <td>21st December,2023</td>
-                <td><button class="btn btn-danger delete-user-btn">Delete</button></td>
-
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Ankit Kunwar</td>
-                <td>@example.com</td>
-                <td>+2356457631</td>
-                <td>21st December,2023</td>
-                <td><button class="btn btn-danger delete-user-btn">Delete</button></td>
-              </tr>
-              <tr>
-                <th scope="row">4</th>
-                <td>Aakassh Chhetri</td>
-                <td>@example.com</td>
-                <td>+2356457631</td>
-                <td>21st December,2023</td>
-                <td><button class="btn btn-danger delete-user-btn">Delete</button></td>
-              </tr>
-              <tr>
-                <th scope="row">5</th>
-                <td>Prajwal Shrestha</td>
-                <td>@example.com</td>
-                <td>+2356457631</td>
-                <td>21st December,2023</td>
-                <td><button class="btn btn-danger delete-user-btn">Delete</button></td>
-              </tr>
-              
+             
               <!-- More rows here -->
             </tbody>
           </table>
@@ -157,9 +124,6 @@
   <div id="userButtons" style="display: none;">
     <div class="container mt-4 ml-5">
       <div class="row">
-        <div class="col-md-12">
-          <button class="btn btn-primary" id="addUserBtn">Add User</button>
-        </div>
       </div>
     </div>
     <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel" aria-hidden="true">
@@ -193,7 +157,6 @@
                 <label for="dateJoined">Date of Joined:</label>
                 <input type="date" class="form-control" id="dateJoined" required>
               </div>
-              <button type="submit" class="btn btn-primary">Add User</button>
             </form>
           </div>
         </div>
@@ -215,50 +178,24 @@
                 <th scope="col">Email</th>
                 <th scope="col">Contact Number</th>
                 <th scope="col">Date of Joined</th>
+                <th scope="col">Actions</th>
               </tr>
             </thead>
             <tbody>
               <!-- Sample data, replace with dynamic data -->
               <tr>
                 <th scope="row">1</th>
-                <td>Mohommad Samrose</td>
+                <td>Ram Bahadur</td>
                 <td>example.com</td>
                 <td>+2356457631</td>
                 <td>21st December,2023</td>
+                <td><button class="btn btn-danger delete-user-btn">Delete</button></td>
               </tr>
               <tr>
-                <th scope="row">2</th>
-                <td>Ishaan Pudasaini</td>
-                <td>jane@example.com</td>
-                <td>+2356457631</td>
-                <td>21st December,2023</td>
-
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Ankit Kunwar</td>
-                <td>@example.com</td>
-                <td>+2356457631</td>
-                <td>21st December,2023</td>
-              </tr>
-              <tr>
-                <th scope="row">4</th>
-                <td>Aakassh Chhetri</td>
-                <td>@example.com</td>
-                <td>+2356457631</td>
-                <td>21st December,2023</td>
-              </tr>
-              <tr>
-                <th scope="row">5</th>
-                <td>Prajwal Shrestha</td>
-                <td>@example.com</td>
-                <td>+2356457631</td>
-                <td>21st December,2023</td>
-              </tr>
               <!-- Mor-->
             </tbody>
           </table>
-          <button class="btn btn-primary" id="addUserBtn" data-toggle="modal" data-target="#addUserModal">Add User</button>
+
         </div>
       </div>
     </div>
@@ -268,9 +205,37 @@
     <div class="container mt-4 ml-5">
       <div class="row">
         <div class="col-md-12">
-          <button class="btn btn-primary" id="addSellerBtn">Add Seller</button>
-          <button class="btn btn-danger ml-2" id="deleteSellerBtn">Delete Seller</button>
+          <button class="btn btn-primary" id="addSellerBtn" onclick="openModal()">Add Seller</button>
         </div>
+        
+        <div id="addSellerModal" class="modal" style="display: none;">
+          <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Add Seller</h2>
+            <form id="addSellerForm">
+              <div class="form-group">
+                <label for="sellerID">Seller ID:</label>
+                <input type="text" class="form-control" id="sellerID" required>
+              </div>
+              <div class="form-group">
+                <label for="sellerName">Name:</label>
+                <input type="text" class="form-control" id="sellerName" required>
+              </div>
+              <div class="form-group">
+                <label for="sellerEmail">Email:</label>
+                <input type="email" class="form-control" id="sellerEmail" required>
+              </div>
+              <div class="form-group">
+                <label for="sellerContact">Contact No:</label>
+                <input type="tel" class="form-control" id="sellerContact" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Add Seller</button>
+            </form>
+          </div>
+        </div>
+        
+        
+        
       </div>
     </div>
   </div>
@@ -289,6 +254,7 @@
                 <th scope="col">Sales</th>
                 <th scope="col">Price</th>
                 <th scope="col">Image</th>
+                <th scope="col">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -299,6 +265,7 @@
                 <td>1000</td>
                 <td>$50</td>
                 <td><img src="product1.jpg" alt="Product 1" style="width: 50px; height: 50px;"></td>
+                <td><button class="btn btn-danger delete-user-btn">Delete</button></td>
               </tr>
               <tr>
                 <th scope="row">2</th>
@@ -306,6 +273,7 @@
                 <td>800</td>
                 <td>$40</td>
                 <td><img src="product2.jpg" alt="Product 2" style="width: 50px; height: 50px;"></td>
+                <td><button class="btn btn-danger delete-user-btn">Delete</button></td>
               </tr>
               <!-- More rows here -->
             </tbody>
@@ -319,6 +287,7 @@
                 <th scope="col">Sales</th>
                 <th scope="col">Price</th>
                 <th scope="col">Image</th>
+                <th scope="col">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -329,6 +298,7 @@
                 <td>200</td>
                 <td>$60</td>
                 <td><img src="product3.jpg" alt="Product 3" style="width: 50px; height: 50px;"></td>
+                <td><button class="btn btn-danger delete-user-btn">Delete</button></td>
               </tr>
               <tr>
                 <th scope="row">4</th>
@@ -336,6 +306,7 @@
                 <td>300</td>
                 <td>$70</td>
                 <td><img src="product4.jpg" alt="Product 4" style="width: 50px; height: 50px;"></td>
+                <td><button class="btn btn-danger delete-user-btn">Delete</button></td>
               </tr>
               <!-- More rows here -->
             </tbody>
@@ -349,12 +320,54 @@
     <div class="container mt-4 ml-5">
       <div class="row">
         <div class="col-md-12">
-          <button class="btn btn-primary" id="addProductBtn">Add Product</button>
-          <button class="btn btn-danger ml-2" id="deleteProductBtn">Delete Product</button>
+          <button class="btn btn-primary" id="addProductBtn" data-toggle="modal" data-target="#addProductModal">Add Product</button>
         </div>
       </div>
     </div>
   </div>
+  
+  <!-- Modal for adding a product -->
+  <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addProductModalLabel">Add Product</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="productName">Name:</label>
+              <input type="text" class="form-control" id="productName" required>
+            </div>
+            <div class="form-group">
+              <label for="productID">ID:</label>
+              <input type="text" class="form-control" id="productID" required>
+            </div>
+            <div class="form-group">
+              <label for="productPrice">Price:</label>
+              <input type="number" class="form-control" id="productPrice" required>
+            </div>
+            <div class="form-group">
+              <label for="productDiscount">Discount Amount:</label>
+              <input type="number" class="form-control" id="productDiscount" required>
+            </div>
+            
+            <div id="imageFields">
+              <!-- Image Fields will be dynamically added here -->
+            </div>
+          
+            <button type="button" class="btn btn-success" onclick="addImageField()">+ Add Image</button>
+            <button type="submit" class="btn btn-primary">Add Product</button>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <!-- Teams section, initially hidden -->
 <div id="teamsSection" style="display: none;">
   <div class="container mt-4 ml-5">
@@ -435,6 +448,7 @@
     </div>
   </div>
 </div>
+
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -561,114 +575,162 @@ document.getElementById("addUserForm").addEventListener("submit", function(event
   });
 
 
+
+  function addImageField() {
+    var imageFieldsDiv = document.getElementById("imageFields");
+  
+    // Create a new input element for image
+    var imageField = document.createElement("div");
+    imageField.innerHTML = `
+      <div class="form-group">
+        <label for="productImage">Image:</label>
+        <input type="file" class="form-control" id="productImage" name="productImage[]" required>
+      </div>
+    `;
+  
+    // Append the new image input field to the imageFieldsDiv
+    imageFieldsDiv.appendChild(imageField);
+  }
+  
+
+
+
+// Function to open the modal
+function openModal() {
+  var modal = document.getElementById("addSellerModal");
+  modal.style.display = "block";
+}
+
+// Function to close the modal
+function closeModal() {
+  var modal = document.getElementById("addSellerModal");
+  modal.style.display = "none";
+}
+
+// Form submission handling
+var addSellerForm = document.getElementById("addSellerForm");
+addSellerForm.addEventListener("submit", function(event) {
+  event.preventDefault();
+  // Perform your form submission logic here
+  // For example, you can collect the form data and send it to the server
+  var sellerID = document.getElementById("sellerID").value;
+  var sellerName = document.getElementById("sellerName").value;
+  var sellerEmail = document.getElementById("sellerEmail").value;
+  var sellerContact = document.getElementById("sellerContact").value;
+  // Once you have the form data, you can process it accordingly
+  // For now, let's just close the modal
+  closeModal();
+});
+
+
 </script>  
 <style>
-    /* Custom CSS for Admin Dashboard */
+  /* Custom CSS for Admin Dashboard */
 
-/* Sidebar */
-.sidebar {
-  width: 250px;
-  background-color: #5412e3bd;
-  color: #fff;
-  padding: 20px;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  overflow-y: auto;
-  transition: width 0.3s; 
-}
-
-.sidebar h2 {
-  margin-bottom: 20px;
-}
-
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-}
-
-.sidebar ul li {
-  margin-bottom: 10px;
-}
-
-.sidebar ul li a {
-  color: #fff;
-  text-decoration: none;
-  display: block;
-  padding: 10px;
-  transition: background-color 0.3s;
-}
-
-.sidebar ul li a:hover {
-  background-color: #165aa2c6;
-}
-
-/* Active link style */
-.sidebar ul li a.active {
-  background-color: #007bff;
-}
-
-/* Style the three boxes */
-.card {
-  margin-bottom: 20px;
-}
-.card-title{
-  text-align: center;
-  color: rebeccapurple;
-  font-size: 30px; 
-  font-family: Arial, sans-serif; 
-}
-.card-text{
-  font-size: 20px; 
-  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-  margin-left: 10px;
-
-}
-/* Style table header */
-.table thead th {
-  text-align: center;
-  background-color: rgb(7, 244, 188);
-}
-
-/* Style table data */
-.table tbody td {
-  vertical-align: middle;
-}
-
-/* Responsive table */
-@media (max-width: 767px) {
-  .table-responsive {
-    overflow-x: auto;
+  /* Sidebar */
+  .sidebar {
+    width: 250px;
+    background-color: #5412e3bd;
+    color: #fff;
+    padding: 20px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    transition: width 0.3s; 
   }
-}
-
-/* Adjust table font size for smaller screens */
-@media (max-width: 575px) {
-  .table td, .table th {
-    font-size: 12px;
+  
+  .sidebar h2 {
+    margin-bottom: 20px;
   }
-}
-.container mt-4 ml-5{
-  width: 100px;
-  text-align: center;
-  margin-left:35px;
-
-}
-.row {
-  display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    margin-right: -100px;
-    margin-left: 206px;
-}
-.card-img-top{
-  padding: 20px;
-  margin: 10px;
-}
-.ram{
-  position: center;
-} 
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar ul li {
+    margin-bottom: 10px;
+  }
+  
+  .sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    transition: background-color 0.3s;
+  }
+  
+  .sidebar ul li a:hover {
+    background-color: #165aa2c6;
+  }
+  
+  /* Active link style */
+  .sidebar ul li a.active {
+    background-color: #007bff;
+  }
+  
+  /* Style the three boxes */
+  .card {
+    margin-bottom: 20px;
+  }
+  .card-title{
+    text-align: center;
+    color: rebeccapurple;
+    font-size: 30px; 
+    font-family: Arial, sans-serif; 
+  }
+  .card-text{
+    font-size: 20px; 
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    margin-left: 10px;
+  
+  }
+  /* Style table header */
+  .table thead th {
+    text-align: center;
+    background-color: rgb(7, 244, 188);
+  }
+  
+  /* Style table data */
+  .table tbody td {
+    vertical-align: middle;
+  }
+  
+  /* Responsive table */
+  @media (max-width: 767px) {
+    .table-responsive {
+      overflow-x: auto;
+    }
+  }
+  
+  /* Adjust table font size for smaller screens */
+  @media (max-width: 575px) {
+    .table td, .table th {
+      font-size: 12px;
+    }
+  }
+  .container mt-4 ml-5{
+    width: 100px;
+    text-align: center;
+    margin-left:35px;
+  
+  }
+  .row {
+    display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      margin-right: -100px;
+      margin-left: 206px;
+  }
+  .card-img-top{
+    padding: 20px;
+    margin: 10px;
+  }
+  .ram{
+    position: center;
+  } 
 </style>
 </body>
 </html>

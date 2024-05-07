@@ -132,6 +132,65 @@
         .btn-success:hover {
             background-color: darkgreen;  /* Darker on hover */
         }
+        .button {
+            background-color: green; /* Set the background color to green */
+            color: white; /* Set the text color to white */
+            border: none; /* Optional: remove the border */
+            padding: 10px 20px; /* Adjust padding for size and comfort */
+            text-align: center; /* Center the text */
+            text-decoration: none; /* Remove underline from links */
+            font-size: 16px; /* Set a suitable font size */
+            border-radius: 5px; /* Optional: add rounded corners */
+            cursor: pointer; /* Change cursor to pointer when hovering */
+        }
+        
+        .button:hover {
+            background-color: darkgreen; /* Optional: darken on hover for effect */
+        }
+        .modal {
+            display: none; /* Initially hidden */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4); /* Background overlay */
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        /* Style for the Esewa form */
+        .esewa-form {
+            display: none; /* Initially hidden */
+        }
+
+        .esewa-form input {
+            display: none; /* Hide the form inputs but keep the data for form submission */
+        }
+        
     
 </style>
 <html>
@@ -174,9 +233,74 @@
             </tr>
         </table>
     </div>
+            <!-- Button to open the modal -->
+            <button onclick="showModal()" class="checkout-btn">Checkout</button>
 
-    <a href="#" class="checkout-btn">Checkout</a>
-</div>
+            <!-- The modal -->
+            <div id="checkoutModal" class="modal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- Close button for the modal -->
+                        <span class="close" onclick="closeModal()">&times;</span>
+        
+                        <!-- Checkout form and content -->
+                        <div class="modal-body">
+                            <h1 style="text-align: center; color: #333;">Checkout</h1>
+        
+                            <!-- Order Summary -->
+                            <div>
+                                <h2 style="color: #555;">Order Summary</h2>
+                                <ul style="list-style-type: none; padding: 0;">
+                                    <!-- Loop through cart_items or order_items -->
+                                    {% for item in cart_items %}
+                                        <li style="border-bottom: 1px solid #ddd; padding: 10px;">
+                                            <!-- Display the product name and price -->
+                                            <span style="float: left;">{{ item.product.title }}</span>
+                                            <span style="float: right;">{{ item.get_product_price }}</span>  <!-- Adjust based on your logic -->
+                                        </li>
+                                    {% endfor %}
+                                    
+                                    <!-- Calculate and display the total -->
+                                    <li style="padding: 10px;">
+                                        <strong style="float: left;">Total</strong>
+                                        <strong style="float: right;">{{ cart_total }}</strong>  <!-- Display the total price -->
+                                    </li>
+                                </ul>
+                            </div>
+        
+                            <!-- Customer Information -->
+                            <div>
+                                <h2 style="color: #555;">Customer Information</h2>
+                                <form action="{% url 'checkout' %}" method="POST"  id="checkout-form">
+                                    {% csrf_token %}
+                                    {{ form.as_p }}
+                                    <label for="name" style="display: block; margin-top: 10px;">Full Name:</label>
+                                    <input type="text" id="name" name="name" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
+        
+                                    <label for="email" style="display: block; margin-top: 10px;">Email:</label>
+                                    <input type="email" id="email" name="email" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
+        
+                                    <label for="address" style="display: block; margin-top: 10px;">Shipping Address:</label>
+                                    <textarea id="address" rows="3" name="address" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+        
+                                    <!-- Payment Information -->
+                                    <h2 style="color: #555; margin-top: 20px;">Payment Information</h2>
+                                    <label for="paymentMethod" style="display: block;">Payment Method:</label>
+                                    <select id="paymentMethod" name="paymentMethod" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
+                                        <option value="Cash">Cash on Delivery</option>
+                                    </select>
+                                    <button type="submit" 
+                                    value="Submit" 
+                                    class="btn btn-success" 
+                                    style="width: 100%; background-color: #4CAF50; color: white; padding: 10px; border: none; border-radius: 5px; margin-top: 20px;">
+                                    Complete Purchase
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+            </div>   
+    </div>
+    </div>
 <div class="apply-section">
     <form method="POST">
         {% include "base/alert.html" %}
@@ -186,11 +310,25 @@
         <button type="submit">Apply</button>
       <!-- Apply button -->
     </form>
-    </div>
+    
     {% if cart.coupon %}
-    <a href="{% url 'remove_coupon' cart.uid %}" class="btn btn-success">{{cart.coupon.coupon_code}}</a>
+    <a href="{% url 'remove_coupon' cart.uid %}" class="button">{{cart.coupon.coupon_code}}</a>
     {% endif %}
 </div>
+</div>
 </html>
-{% endblock %}
+<script>
+    // Function to open the modal
+    function showModal() {
+        document.getElementById("checkoutModal").style.display = "block";
+    }
 
+    // Function to close the modal
+    function closeModal() {
+        document.getElementById("checkoutModal").style.display = "none";
+    }
+
+    // Function to toggle payment method visibility
+
+</script>
+{% endblock %}

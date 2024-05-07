@@ -1,0 +1,100 @@
+<!-- admin_login.html -->
+<form method="POST">
+    {% csrf_token %}  <!-- CSRF protection token -->
+    <div>
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username" required>
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" required>
+    </div>
+    <button type="submit">Login</button>
+</form>
+
+{% if messages %}
+    <div>
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<style>\
+    /* Styling for the main container to center the form on the page */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;  /* Full viewport height */
+    background-color: #e0e0e0; /* Light background for contrast */
+}
+
+/* Base styling for the form container */
+form {
+    width: 300px;  /* Fixed width for the form */
+    padding: 20px;
+    background-color: white;  /* White background for the form */
+    border: 1px solid #ddd;  /* Light border */
+    border-radius: 8px;  /* Rounded corners */
+    box-shadow: 0 4px 10px blue;  /* Subtle shadow */
+    margin-left: 567px;
+    margin-top: 109px;
+}
+
+/* Styling for form fields and labels */
+.form-group {
+    margin-bottom: 15px;  /* Spacing between fields */
+}
+
+label {
+    display: block;  /* Labels should be block elements */
+    font-weight: bold;  /* Bold text for labels */
+    color: #333;  /* Dark text color */
+    margin-bottom: 5px;  /* Space between label and input */
+}
+
+input {
+    width: 100%;  /* Input takes full width */
+    padding: 10px;  /* Padding inside inputs */
+    border: 1px solid #ccc;  /* Light border */
+    border-radius: 5px;  /* Rounded corners */
+    transition: border-color 0.2s;  /* Smooth transition on focus */
+}
+
+/* Change border color when focused */
+input:focus {
+    border-color: #4CAF50;  /* Green border on focus */
+    outline: none;  /* Remove default outline */
+}
+
+/* Styling for the submit button */
+button {
+    width: 100%;  /* Full-width button */
+    padding: 10px;  /* Padding for the button */
+    background-color: #0e36ca;  /* Green background */
+    color: white;  /* White text */
+    border: none;  /* No border */
+    border-radius: 5px;  /* Rounded corners */
+    cursor: pointer;  /* Pointer cursor */
+    transition: background-color 0.3s;  /* Smooth transition on hover */
+}
+
+/* Change background color when hovering over the button */
+button:hover {
+    background-color: #45a049;  /* Darker green on hover */
+}
+
+/* Styling for error/success messages */
+.messages {
+    text-align: center;  /* Center-align the messages */
+}
+
+.messages p {
+    color: red;  /* Default color for error messages */
+    font-size: 14px;  /* Font size */
+    font-weight: bold;  /* Bold text */
+}
+
+
+</style>

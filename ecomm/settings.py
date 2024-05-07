@@ -36,7 +36,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    'material',
+    'material.admin',
+    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sites',
     'django.contrib.contenttypes',
@@ -46,7 +48,7 @@ INSTALLED_APPS = [
     'products',
     'accounts',
     'home',
-    
+    'customadmin',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -66,6 +68,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'ecomm.urls'
+
 
 TEMPLATES = [
     {
@@ -143,7 +146,7 @@ STATIC_URL = '/static/'
 
 
 
-SITE_ID =2
+SITE_ID = 1
   # Adjust 'home' to your app name
 MEDIA_URL = '/media/'
 
@@ -197,3 +200,7 @@ AUTHENTICATION_BACKENDS = [
 
 LOGIN_REDIRECT_URL = '/'  # or the URL you want users to be redirected to after login
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'  # or the URL you want users to be redirected to after logout
+
+
+
+LOGIN_URL = '/admin/login/' 
