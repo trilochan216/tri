@@ -119,12 +119,12 @@
         <div class="or-divider">
             <span>OR</span>
         </div>
-        <div class="social-login">
+        {% comment %} <div class="social-login">
             {% load socialaccount %}
             <a href='{% provider_login_url "google" %}?next=/'>
             <button  id="google-login" class="google-login">Login with Google</button>
             </a>
-        </div>
+        </div> {% endcomment %}
         <div>
             {% comment %} suman paudel {% endcomment %}
            <span> Already have account</span> <a href='{% url 'login' %}'>Login</a>

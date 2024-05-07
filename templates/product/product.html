@@ -370,7 +370,7 @@
 							    <input type="text" name="quantity" value="1" class="qty">
 							    <div class="qtyplus">+</div>
 							</form>
-							<a  class="round-black-btn"  href="{% url 'add_to_cart' product.uid %}?variant={{selected_size}}" > Add to Cart</a>
+							<a  class="round-black-btn"  href="{% url 'add_to_cart' slug=product.slug %}?variant={{selected_size}}" > Add to Cart</a>
 	        			</div>
 	        		</div>
 	        	</div>
