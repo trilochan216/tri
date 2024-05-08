@@ -92,30 +92,38 @@
       <div class="row">
         <div class="col-md-12">
           <h2>Recent Users</h2>
-          <table class="table">
-            <thead class="thead-dark">
-              <tr>
-                <th scope="col">User ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Contact Number</th>
-                <th scope="col">Date of joined</th>
 
-              </tr>
+          <table class="table">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Date Joined</th>
+                    <th>Last Login</th>
+                </tr>
             </thead>
-            <tbody id="userTableBody"> <!-- Added ID for tbody to manipulate it via JavaScript -->
-              <!-- Sample data, replace with dynamic data -->
-              <tr>
-                <th scope="row">1</th>
-                <td>Ram Bahadur</td>
-                <td>example.com</td>
-                <td>+2356457631</td>
-                <td>21st December,2023</td>
-              </tr>
-             
-              <!-- More rows here -->
+            <tbody>
+                {% for user in users %}  <!-- Loop through the users context variable -->
+                <tr>
+                    <td>{{ user.id }}</td>  <!-- User ID -->
+                    <td>{{ user.first_name }}</td>  <!-- First Name -->
+                    <td>{{ user.last_name }}</td>  <!-- Last Name -->
+                    <td>{{ user.email }}</td>  <!-- Email -->
+                    <td>{{ user.date_joined|date:"jS F, Y" }}</td>  <!-- Date Joined -->
+                    <td>
+                        {% if user.last_login %}
+                            {{ user.last_login|date:"jS F, Y H:i" }}  <!-- Last Login with time -->
+                        {% else %}
+                            Never
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
             </tbody>
-          </table>
+        </table>
+
         </div>
       </div>
     </div>
@@ -249,68 +257,31 @@
           <table class="table">
             <thead class="thead-dark">
               <tr>
-                <th scope="col">Product ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Sales</th>
-                <th scope="col">Price</th>
-                <th scope="col">Image</th>
-                <th scope="col">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Sample data, replace with dynamic data -->
-              <tr>
-                <th scope="row">1</th>
-                <td>Product 1</td>
-                <td>1000</td>
-                <td>$50</td>
-                <td><img src="product1.jpg" alt="Product 1" style="width: 50px; height: 50px;"></td>
-                <td><button class="btn btn-danger delete-user-btn">Delete</button></td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Product 2</td>
-                <td>800</td>
-                <td>$40</td>
-                <td><img src="product2.jpg" alt="Product 2" style="width: 50px; height: 50px;"></td>
-                <td><button class="btn btn-danger delete-user-btn">Delete</button></td>
-              </tr>
-              <!-- More rows here -->
-            </tbody>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Stock</th>
+            </tr>
+            {% for product in products %}
+            <tr>
+                <td>
+                    {% with product.product_images.first as product_image %}
+                        {% if product_image and product_image.image %}
+                            <img src="{{ product_image.image.url }}" alt="{{ product.product_name }}" style="height: 50px;"/>
+                        {% else %}
+                            No image available
+                        {% endif %}
+                    {% endwith %}
+                </td>
+                <td>{{ product.product_name }}</td>
+                <td>{{ product.product_description }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.stock }}</td>
+            </tr>
+            {% endfor %}
           </table>
-          <h2>Less Selling Products</h2>
-          <table class="table">
-            <thead class="thead-dark">
-              <tr>
-                <th scope="col">Product ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Sales</th>
-                <th scope="col">Price</th>
-                <th scope="col">Image</th>
-                <th scope="col">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Sample data, replace with dynamic data -->
-              <tr>
-                <th scope="row">3</th>
-                <td>Product 3</td>
-                <td>200</td>
-                <td>$60</td>
-                <td><img src="product3.jpg" alt="Product 3" style="width: 50px; height: 50px;"></td>
-                <td><button class="btn btn-danger delete-user-btn">Delete</button></td>
-              </tr>
-              <tr>
-                <th scope="row">4</th>
-                <td>Product 4</td>
-                <td>300</td>
-                <td>$70</td>
-                <td><img src="product4.jpg" alt="Product 4" style="width: 50px; height: 50px;"></td>
-                <td><button class="btn btn-danger delete-user-btn">Delete</button></td>
-              </tr>
-              <!-- More rows here -->
-            </tbody>
-          </table>
+            <!-- Sample data, replace with dynamic data -->
         </div>
       </div>
     </div>
@@ -337,32 +308,21 @@
           </button>
         </div>
         <div class="modal-body">
-          <form>
-            <div class="form-group">
-              <label for="productName">Name:</label>
-              <input type="text" class="form-control" id="productName" required>
-            </div>
-            <div class="form-group">
-              <label for="productID">ID:</label>
-              <input type="text" class="form-control" id="productID" required>
-            </div>
-            <div class="form-group">
-              <label for="productPrice">Price:</label>
-              <input type="number" class="form-control" id="productPrice" required>
-            </div>
-            <div class="form-group">
-              <label for="productDiscount">Discount Amount:</label>
-              <input type="number" class="form-control" id="productDiscount" required>
-            </div>
-            
-            <div id="imageFields">
-              <!-- Image Fields will be dynamically added here -->
-            </div>
-          
-            <button type="button" class="btn btn-success" onclick="addImageField()">+ Add Image</button>
-            <button type="submit" class="btn btn-primary">Add Product</button>
-          </form>
-          
+
+          {% load static %}  <!-- Load static files -->
+            <!-- templates/customadmin/dashboard.html -->
+            <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              {{ form.as_p }}
+      
+              <!-- Product Images Formset -->
+              {{ formset.management_form }}
+              {% for form in formset %}
+                  {{ form.as_p }}
+              {% endfor %}
+              
+              <button type="submit">Add Product</button>
+          </form>     
         </div>
       </div>
     </div>
