@@ -114,12 +114,6 @@ def remove_cart(request, cart_item_uid):
     
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
-    
-# def cart(request):
-#     context = {'cart': Cart.objects.filter(is_paid=False, user= request.user)}
-#     if request.method == 'POST':
-#         pass
-#     return render(request, 'accounts/cart.html' , context)
 
 @login_required
 def cart(request):
@@ -190,110 +184,17 @@ def remove_coupon(request, cart_id):
 
 
 
-
-# @login_required
-# def checkout(request):
-#     if request.method == 'POST':
-#         # Extract data from the form
-#         address = request.POST.get("address")
-#         payment_method = request.POST.get("payment_method")
-
-#         # Retrieve the user's cart
-#         cart = Cart.objects.get(customer=request.user.customer, is_paid=False)
-#         total_cost = sum(item.subtotal for item in cart.cartproduct_set.all())
-
-#         # Create a new order with the payment method
-#         order = Order.objects.create(
-#             user=request.user,
-#             total_cost=total_cost,
-#             payment_method=payment_method,
-#             address=address,
-#         )
-
-#         # Create OrderItem for each item in the cart
-#         for cart_product in cart.cartproduct_set.all():
-#             OrderItem.objects.create(
-#                 order=order,
-#                 product=cart_product.product,
-#                 quantity=cart_product.quantity,
-#                 price=cart_product.subtotal,
-#             )
-
-#         # Mark the cart as paid
-#         cart.is_paid = True
-#         cart.save()
-
-#         # Redirect to eSewa payment if chosen
-#         if payment_method == "Esewa":
-#             return redirect(f"/esewa-request/?o_id={order.id}")
-
-#         # Otherwise, redirect to order detail page
-#         return redirect("order_detail", order_id=order.id)
-
-#     # Default behavior if request is not POST
-#     return redirect("cart")
-
-
 @login_required
 def order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     return render(request, "order_detail.html", {"order": order})
 
-
-
-# import requests # type: ignore
-# from django.views import View
-# from django.shortcuts import render, redirect
-# from django.conf import settings
-# from django.http import JsonResponse
-# from .models import Order
-# import xml.etree.ElementTree as ET
-
-# # View to initiate eSewa payment
-# class EsewaRequestView(View):
-#     def get(self, request, *args, **kwargs):
-#         o_id = request.GET.get("o_id")
-#         order = Order.objects.get(id=o_id)
-#         context = {
-#             "order": order,
-#             # "esewa_merchant_code": "EPAYTEST",
-#             "esewa_return_url": "https://esewa.com.np",
-#             "esewa_failure_url": "https://google.com",
-#         }
-#         return render(request, "esewarequest.html", context)
-
-# # View to verify eSewa payment
-# class EsewaVerifyView(View):
-#     def get(self, request, *args, **kwargs):
-#         o_id = request.GET.get("oid")
-#         amt = request.GET.get("amt")
-#         refId = request.GET.get("refId")
-
-#         # Configuration for eSewa verification
-#         url = "https://uat.esewa.com.np/epay/transrec"
-#         data = {
-#             'amt': amt,
-#             'scd': 'EPAYTEST',
-#             'rid': refId,
-#             'pid': o_id,
-#         }
-#         response = requests.post(url, data)
-#         root = ET.fromstring(response.content)
-#         status = root[0].text.strip()
-
-#         order_obj = Order.objects.get(id=o_id.split("_")[1])
-
-#         if status == "Success":
-#             order_obj.payment_completed = True
-#             order_obj.payment_reference = refId
-#             order_obj.save()
-#             return redirect("/")
-#         else:
-#             return redirect("/esewa-request/?o_id=" + str(order_obj.id))
-        
-        
+ 
 
 from django import forms
+from django.core.mail import EmailMessage
+from django.conf import settings
+from base.helpers import save_pdf
 
 class CheckoutForm(forms.Form):
     name = forms.CharField(max_length=255)
@@ -304,49 +205,65 @@ class CheckoutForm(forms.Form):
         required=True  # Ensure the field is required
     )
 
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from django.db import transaction
-from .models import Order, OrderItem, CartItems, Cart
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.core.mail import EmailMessage
+from .models import Order, OrderItem, Cart
 from .forms import CheckoutForm
+from .utils import send_order_email  # Functions for PDF generation and sending email
 
 @login_required
 def checkout(request):
     if request.method == "POST":
         form = CheckoutForm(request.POST)
         if form.is_valid():
-            with transaction.atomic():
-                # Create the order
-                order = Order.objects.create(
-                    user=request.user,
-                    name=form.cleaned_data['name'],
-                    email=form.cleaned_data['email'],
-                    address=form.cleaned_data['address'],
-                    payment_method="Cash on Delivery"
-                )
-                
-                # Add order items from the cart
-                cart = Cart.objects.filter(user=request.user, is_paid=False).first()
-                if cart:
-                    for item in cart.cart_items.all():
-                        OrderItem.objects.create(
-                            order=order,
-                            product=item.product,
-                            quantity=item.quantity
-                        )
-                    # Mark the cart as paid
-                    cart.is_paid = True
-                    cart.save()
-                
-                messages.success(request, "Order placed successfully!")
-                return redirect('cart')  # Redirect to the cart or success page
+            with transaction.atomic():  # Ensure database consistency
+                try:
+                    # Create the order
+                    order = Order.objects.create(
+                        user=request.user,
+                        name=form.cleaned_data["name"],
+                        email=form.cleaned_data["email"],
+                        address=form.cleaned_data["address"],
+                        payment_method="Cash on Delivery",
+                    )
+                    
+                                    # Fetch cart and cart items
+                    cart = Cart.objects.filter(user=request.user, is_paid=False).first()
+                    cart_items = cart.cart_items.all() if cart else []
+                    cart_total = cart.get_cart_total() if cart else 0
+                    if cart:
+                        for item in cart.cart_items.all():
+                            OrderItem.objects.create(
+                                order=order,
+                                product=item.product,
+                                quantity=item.quantity,
+                            )
+
+                        # Mark the cart as paid
+                        cart.is_paid = True
+                        cart.save()
+
+                    # Generate the PDF for the order
+                    pdf_file_name, pdf_success = save_pdf({"order": order, "cart_items": cart.cart_items.all()})
+                    if pdf_success:
+                        # Construct the full path for the PDF
+                        pdf_path = f"{settings.BASE_DIR}/templates/base/{pdf_file_name}.pdf"
+                        # Send the order confirmation email with the PDF attachment
+                        send_order_email(order, pdf_path)
+                    else:
+                        messages.error(request, "Failed to generate order PDF.")
+
+                    messages.success(request, "Order placed successfully!")
+                    return redirect("cart")  # Redirect to success page
+                    
+                except Exception as e:
+                    messages.error(request, f"An error occurred while placing your order: {str(e)}")
+                    return redirect("cart")
             
         else:
-            # Form validation failed
-            messages.error(request, "There were errors with your submission.")
-            return redirect('cart')  # Redirect back to cart if error
+            messages.error(request, "Error placing the order. Please check your input.")
+            return redirect("cart")  # Redirect back to cart if validation fails
 
-    # If the request is not POST, redirect to the cart
-    return redirect('cart')
+    return redirect("cart")  # Redirect to cart if method is not POST

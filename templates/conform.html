@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Confirmation</title>
+</head>
+<body>
+    <h1>Order Confirmation</h1>
+    <p>Thank you for your purchase! Your order has been received and is being processed.</p>
+
+    <!-- Order Information -->
+    <h2>Order Information</h2>
+    <p><strong>Order ID:</strong> {{ order.id }}</p>
+    <p><strong>Order Date:</strong> {{ order.created_at }}</p>
+    
+    <!-- User Information -->
+    <h2>User Information</h2>
+    <p><strong>Name:</strong> {{ order.name }}</p>
+    <p><strong>Email:</strong> {{ order.email }}</p>
+    <p><strong>Shipping Address:</strong> {{ order.address }}</p>
+
+    <!-- Order Details -->
+    <h2>Order Details</h2>
+    <ul>
+        {% for item in cart_items %}
+        <li>
+            <span>Product: {{ item.product.title }}</span>
+            <span>Quantity: {{ item.quantity }}</span>
+            <span>Subtotal: {{ item.get_product_price }}</span>  <!-- Calculate the subtotal -->
+        </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Total Price -->
+    <h3>Total Price: {{cart_total}}</h3>  <!-- Ensure this method exists in the Order model -->
+
+    <!-- Payment Information -->
+    <h2>Payment Information</h2>
+    <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
+
+    <!-- Closing Note -->
+    <p>If you have any questions, please contact our support team at: {{ settings.SUPPORT_EMAIL }}</p>
+    <p>Thank you for shopping with us!</p>
+</body>
+</html>
