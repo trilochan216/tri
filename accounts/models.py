@@ -168,21 +168,27 @@ def send_email_token(sender, instance, created, **kwargs):
         
 
 # Enum for Order Status
+from django.db import models
+from django.contrib.auth.models import User
 import uuid
+from django.utils.translation import gettext_lazy as _
 
-# Order status enum
+# Enum for Order Status
 class OrderStatus(models.TextChoices):
     PROCESSING = "Processing", _("Processing")
     COMPLETED = "Completed", _("Completed")
     CANCELED = "Canceled", _("Canceled")
 
-# Order model to store order details
+# Order model
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
     name = models.CharField(max_length=255)
     email = models.EmailField()
     address = models.TextField()
-    payment_method = models.CharField(max_length=20, default="Cash on Delivery")
+    payment_method = models.CharField(
+        max_length=20, 
+        default="Cash on Delivery"
+    )
     status = models.CharField(
         max_length=10, 
         choices=OrderStatus.choices, 
@@ -194,11 +200,48 @@ class Order(models.Model):
     def __str__(self):
         return f"Order #{self.pk} - {self.name} - {self.status}"
 
-# OrderItem model to represent items in the order
+    # Method to calculate the total revenue from completed orders
+    @classmethod
+    def total_revenue(cls):
+        return sum(order.total_price() for order in cls.objects.filter(status=OrderStatus.COMPLETED))
+
+    # Method to count all completed orders
+    @classmethod
+    def total_completed_orders(cls):
+        return cls.objects.filter(status=OrderStatus.COMPLETED).count()
+
+    # Calculate the total price for an order
+    def total_price(self):
+        return sum(item.subtotal for item in self.items.all())
+
+
+
+# OrderItem model
+from django.db import models
+from products.models import Product  # Make sure this import is correct
+
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
-    product = models.ForeignKey('products.Product', on_delete=models.CASCADE)
+    order = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
-        return f"{self.product.title} x {self.quantity}"
+        return f"{self.product.product_name} x {self.quantity}"
+
+
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from .models import Order, OrderStatus, OrderItem
+
+@receiver(post_save, sender=Order)
+def handle_order_status_change(sender, instance, created, **kwargs):
+    if not created and instance.status == "Completed":
+        for item in instance.items.all():
+            product = item.product
+            if product.stock < item.quantity:  # Ensure stock doesn't go negative
+                raise ValueError("Insufficient stock")
+            product.stock -= item.quantity
+            product.save()
+
+

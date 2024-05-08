@@ -46,6 +46,8 @@ class Product(BaseModel):
     product_description = models.TextField()
     color_variant = models.ManyToManyField(ColorVariant, blank=True)
     size_variant = models.ManyToManyField(SizeVariant, blank=True)
+        # Adding a stock field to manage product inventory
+    stock = models.PositiveIntegerField(default=0)
     
     
     def save(self, *args, **kwargs):

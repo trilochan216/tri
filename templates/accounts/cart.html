@@ -250,15 +250,14 @@
                             <!-- Order Summary -->
                             <div>
                                 <h2 style="color: #555;">Order Summary</h2>
-                                <ul style="list-style-type: none; padding: 0;">
+                                <ul style="list-style-type: none; padding: 10px;">
                                     <!-- Loop through cart_items or order_items -->
                                     {% for item in cart_items %}
-                                        <li style="border-bottom: 1px solid #ddd; padding: 10px;">
-                                            <!-- Display the product name and price -->
-                                            <span style="float: left;">{{ item.product.title }}</span>
-                                            <span style="float: right;">{{ item.get_product_price }}</span>  <!-- Adjust based on your logic -->
-                                        </li>
-                                    {% endfor %}
+                                    <li style="border-bottom: 1px solid #ddd; padding: 10px;">
+                                        <span style="float: left;">{{ item.product.product_name }}</span>  <!-- Ensure this retrieves the correct product name with spaces -->
+                                        <span style="float: right;">{{ item.get_product_price }}</span>
+                                    </li>
+                                {% endfor %}
                                     
                                     <!-- Calculate and display the total -->
                                     <li style="padding: 10px;">
@@ -270,32 +269,36 @@
         
                             <!-- Customer Information -->
                             <div>
-                                <h2 style="color: #555;">Customer Information</h2>
-                                <form action="{% url 'checkout' %}" method="POST"  id="checkout-form">
+                                <h2 style="color: #555; padding: 10px; ">Customer Information</h2>
+                                <form action="{% url 'checkout' %}" method="POST" id="checkout-form">
                                     {% csrf_token %}
-                                    {{ form.as_p }}
-                                    <label for="name" style="display: block; margin-top: 10px;">Full Name:</label>
-                                    <input type="text" id="name" name="name" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
-        
-                                    <label for="email" style="display: block; margin-top: 10px;">Email:</label>
-                                    <input type="email" id="email" name="email" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
-        
-                                    <label for="address" style="display: block; margin-top: 10px;">Shipping Address:</label>
-                                    <textarea id="address" rows="3" name="address" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
-        
+                                    <!-- Full Name: Prefill with user's first and last name -->
+                                    <label for="name">Full Name:</label>
+                                    <input type="text" id="name" name="name" value="{{ user.first_name }} {{ user.last_name }}" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
+                                
+                                    <!-- Email: Prefill with user's email -->
+                                    <label for="email">Email:</label>
+                                    <input type="email" id="email" name="email" value="{{ user.email }}" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
+                                
+                                    <!-- Shipping Address: Prefill with user's address if available -->
+                                    <label for="address">Shipping Address:</label>
+                                    <textarea id="address" rows="3" name="address" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
+                                        {{ user.profile.address }}
+                                    </textarea>
+                                
                                     <!-- Payment Information -->
                                     <h2 style="color: #555; margin-top: 20px;">Payment Information</h2>
                                     <label for="paymentMethod" style="display: block;">Payment Method:</label>
                                     <select id="paymentMethod" name="paymentMethod" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
                                         <option value="Cash">Cash on Delivery</option>
                                     </select>
-                                    <button type="submit" 
-                                    value="Submit" 
-                                    class="btn btn-success" 
-                                    style="width: 100%; background-color: #4CAF50; color: white; padding: 10px; border: none; border-radius: 5px; margin-top: 20px;">
-                                    Complete Purchase
-                                </button>
-                            </form>
+                                
+                                    <!-- Complete Purchase Button -->
+                                    <button type="submit" class="btn btn-success" style="width: 100%; background-color: #4CAF50; color: white; padding: 10px; border: none; border-radius: 5px; margin-top: 20px;">
+                                        Complete Purchase
+                                    </button>
+                                </form>
+                                
                         </div>
                     </div>
             </div>   
