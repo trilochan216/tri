@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
+from accounts.models import Order, OrderItem, OrderStatus
 from products.models import ColorVariant, Product, ProductImage, SizeVariant
 
 
@@ -50,62 +51,285 @@ from customadmin.forms import ProductForm, ColorVariantFormSet, SizeVariantFormS
 
 from django.shortcuts import render, redirect
 from customadmin.forms import ProductForm, ColorVariantFormSet, SizeVariantFormSet, ProductImageFormSet
+from products.models import Product, ColorVariant, SizeVariant, ProductImage
+from django.contrib.auth.decorators import login_required
+
+
+# @login_required
+# def admin_dashboard(request):
+#     form = ProductForm()  # Main product form
+#     color_formset = ColorVariantFormSet(queryset=ColorVariant.objects.none())  # Initialize with no data
+#     size_formset = SizeVariantFormSet(queryset=SizeVariant.objects.none())  # Initialize with no data
+#     image_formset = ProductImageFormSet(queryset=ProductImage.objects.none())  # Initialize with no data
+
+#     if request.method == 'POST':
+#         form = ProductForm(request.POST, request.FILES)  # Include FILES for file uploads
+#         color_formset = ColorVariantFormSet(request.POST, request.FILES)  # Reinitialize with POST data
+#         size_formset = SizeVariantFormSet(request.POST, request.FILES)  # Reinitialize with POST data
+#         image_formset = ProductImageFormSet(request.POST, request.FILES)  # Reinitialize with POST data
+
+#         if form.is_valid() and image_formset.is_valid():  # Ensure required forms are valid
+#             product = form.save(commit=False)  # Save without committing
+#             product.save()  # Save the product to the database
+
+#             # Optional handling for color variants
+#             if color_formset.is_valid():  # Ensure formset is valid
+#                 for color_form in color_formset:
+#                     if color_form.cleaned_data:  # Ensure there's valid data
+#                         color_instance = color_form.save(commit=False)
+#                         color_instance.save()  # Save the color variant
+#                         product.color_variant.add(color_instance)  # Associate with the product
+
+#             # Optional handling for size variants
+#             if size_formset.is_valid():
+#                 for size_form in size_formset:
+#                     if size_form.cleaned_data:  # Ensure there's valid data
+#                         size_instance = size_form.save(commit=False)
+#                         size_instance.save()  # Save the size variant
+#                         product.size_variant.add(size_instance)  # Associate with the product
+
+#             # Required handling for product images
+#             if image_formset.is_valid():
+#                 for image_form in image_formset:
+#                     if image_form.cleaned_data:
+#                         image_instance = image_form.save(commit=False)
+#                         image_instance.product = product  # Associate with the product
+#                         image_instance.save()  # Save the image
+
+#             return redirect('admin_dashboard')  # Redirect after successful save
+
+#     # Context to pass to the template
+#     context = {
+#         'products': Product.objects.all(),  # All products
+#         'users': User.objects.exclude(username='admin'),  # All non-admin users
+#         'form': form,  # Product form
+#         'color_formset': color_formset,  # Formset for color variants
+#         'size_formset': size_formset,  # Formset for size variants
+#         'image_formset': image_formset,  # Formset for product images
+#     }
+
+#     return render(request, 'customadmin/dashboard.html', context)  # Render the dashboard template
+
+
+
+
+
+
+from django.shortcuts import render, redirect
+from accounts.models import Order, OrderItem, OrderStatus
+from customadmin.forms import ProductForm, ColorVariantFormSet, SizeVariantFormSet, ProductImageFormSet
 from products.models import Product
+from django.contrib.auth.models import User
 
 def admin_dashboard(request):
-    products = Product.objects.all()
-    users = User.objects.exclude(username='admin')
-    form = ProductForm()
-    color_formset = ColorVariantFormSet(queryset=ColorVariant.objects.none())  # Initialize with no data
-    size_formset = SizeVariantFormSet(queryset=SizeVariant.objects.none())  # Initialize with no data
-    image_formset = ProductImageFormSet(queryset=ProductImage.objects.none())  # Initialize with no data
+    # Fetch all orders
+    orders = Order.objects.all()
+    
+    # Build a dictionary of order items by order ID
+    order_items_by_order = {order.id: order.items.all() for order in orders}
 
+    # Calculate total amount for each order
+    total_amount_by_order = {
+        order.id: order.total_price()  # Corrected with parentheses
+        for order in orders
+    }
+    
+    
+        # Calculate total sales for completed orders
+    total_sales = sum(
+        order.total_price() for order in orders if order.status == OrderStatus.COMPLETED
+    )
+    
+    total_orders = orders.count()
+    
+    total_products = Product.objects.count()
+    
+    
+    coupons = Coupon.objects.all()
+    coupon_form = CouponForm()
+    existing_coupons = Coupon.objects.all()  # Fetch existing coupons
+    
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)  # Include FILES for file uploads
-        color_formset = ColorVariantFormSet(request.POST, request.FILES)  # Reinitialize with POST data
+        coupon_form = CouponForm(request.POST)  # Process coupon form
+        
+        if coupon_form.is_valid():
+            coupon_form.save()  # Save the new coupon
+            messages.success(request, 'Coupon added successfully!')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))   # Redirect to avoid resubmission
+
+    # Product form and formsets for colors, sizes, and images
+    form = ProductForm()
+    color_formset = ColorVariantFormSet(queryset=ColorVariant.objects.none())
+    size_formset = SizeVariantFormSet(queryset=SizeVariant.objects.none())
+    image_formset = ProductImageFormSet(queryset=ProductImage.objects.none())
+
+    # Handling POST request for new product submissions
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        color_formset = ColorVariantFormSet(request.POST, request.FILES)
         size_formset = SizeVariantFormSet(request.POST, request.FILES)
-        image_formset = ProductImageFormSet(request.POST, request.FILES)  # Handle file uploads
+        image_formset = ProductImageFormSet(request.POST, request.FILES)
 
-        if form.is_valid() and image_formset.is_valid():  # Ensure main form and required formsets are valid
+        if form.is_valid():
             product = form.save(commit=False)
-            product.save()  # Save the product to the database
+            product.save()
 
-            # Optional color variants handling
-            if color_formset.is_valid():  # Ensure the formset is valid
+            # Add color variants if formset is valid
+            if color_formset.is_valid():
                 for color_form in color_formset:
-                    if color_form.cleaned_data:  # Check for valid data
+                    if color_form.cleaned_data:
                         color_instance = color_form.save(commit=False)
-                        color_instance.save()  # Save the color variant
-                        product.color_variant.add(color_instance)  # Associate with the product
+                        color_instance.save()
+                        product.color_variant.add(color_instance)
 
-            # Optional size variants handling
+            # Add size variants if formset is valid
             if size_formset.is_valid():
                 for size_form in size_formset:
-                    if size_form.cleaned_data:  # Ensure valid data
+                    if size_form.cleaned_data:
                         size_instance = size_form.save(commit=False)
-                        size_instance.save()  # Save the size variant
-                        product.size_variant.add(size_instance)  # Associate with the product
+                        size_instance.save()
+                        product.size_variant.add(size_instance)
 
-            # Handle product images
-            if image_formset.is_valid():  # Ensure formset is valid
+            # Add product images
+            if image_formset.is_valid():
                 for image_form in image_formset:
                     if image_form.cleaned_data:
                         image_instance = image_form.save(commit=False)
-                        image_instance.product = product  # Associate with the product
-                        image_instance.save()  # Save the image
+                        image_instance.product = product
+                        image_instance.save()
 
-            return redirect('admin_dashboard')  # Redirect after successful save
+            return redirect('admin_dashboard')
 
+    # Prepare the context for rendering
     context = {
-                'products': products,
-                'users': users,
-                'form': form,
-                'color_formset': color_formset,
-                'size_formset': size_formset,
-                'image_formset': image_formset,  # Include the image formset in the context
-            }
+        'coupons': coupons,
+        'coupon_form': coupon_form,
+        'existing_coupons': existing_coupons,
+        'total_products': total_products,
+        'total_orders': total_orders,
+        'total_sales': total_sales,
+        'orders': orders,
+        'order_items_by_order': order_items_by_order,
+        'total_amount_by_order': total_amount_by_order,
+        'order_status_choices': [choice[0] for choice in OrderStatus.choices],
+        'products': Product.objects.all(),
+        'users': User.objects.exclude(username='admin'),
+        'form': form,
+        'color_formset': color_formset,
+        'size_formset': size_formset,
+        'image_formset': image_formset,
+    }
 
     return render(request, 'customadmin/dashboard.html', context)
+
+
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from products.models import Product
+from django.contrib import messages
+
+from django.shortcuts import get_object_or_404, redirect
+from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.urls import reverse
+from products.models import Product
+
+@login_required
+def delete_product(request, product_name):
+    # Get the product by name (ensure case-insensitive to avoid errors)
+    product = get_object_or_404(Product, product_name=product_name)
+    
+
+    # Handle only POST requests to delete the product
+    if request.method == 'POST':
+        product.delete()  # Delete the product
+        messages.success(request, f"Product '{product.product_name}' has been deleted successfully.")
+
+        # Redirect back to the same page or a specified URL
+        previous_url = request.META.get('HTTP_REFERER', '/')
+        return HttpResponseRedirect(previous_url)  # Redirect back to the referring page
+
+    return redirect('admin_dashboard')  # Fallback if not a POST request
+
+
+
+
+
+from django.shortcuts import get_object_or_404, redirect
+from django.http import HttpResponseRedirect
+from django.contrib import messages
+from accounts.models import Order
+
+def update_order_status(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+
+    if request.method == 'POST':
+        new_status = request.POST.get('status')  # Get the new status from the POST data
+        if new_status:
+            order.status = new_status  # Update the order status
+            order.save()  # Save the changes
+            messages.success(request, f"Order status updated to '{new_status}'.")
+        else:
+            messages.error(request, "Invalid status.")  # Handle empty status
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))  # Redirect back to the dashboard
+
+
+
+
+
+
+
+
+
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from accounts.models import Order
+
+@login_required
+def delete_order(request, order_id):
+    # Check if the order exists and delete it
+    order = get_object_or_404(Order, id=order_id)
+    order.delete()
+    messages.success(request, f"Order #{order_id} deleted successfully.")
+    return redirect('admin_dashboard')  # Redirect back to the dashboard
+
+
+
+
+
+
+
+
+# customadmin/views.py
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from customadmin.forms import CouponForm
+from products.models import Coupon
+from django.shortcuts import get_object_or_404
+
+from django.shortcuts import redirect
+from django.contrib import messages
+from products.models import Coupon
+
+def delete_coupon(request, coupon_code):
+    try:
+        coupon = Coupon.objects.get(coupon_code=coupon_code)  # Find the coupon by code
+        coupon.delete()  # Delete the coupon
+        messages.success(request, f'Coupon "{coupon_code}" deleted successfully.')
+    except Coupon.DoesNotExist:
+        messages.error(request, f'Coupon "{coupon_code}" not found.')
+    return redirect('admin_dashboard')  # Redirect back to dashboard
+
+
+
+
 
 
 

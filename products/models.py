@@ -51,9 +51,19 @@ class Product(BaseModel):
     
     
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.product_name)
-        super().save(*args, **kwargs)
+            if not self.slug or self.slug == "":
+                base_slug = slugify(self.product_name)
+                unique_slug = base_slug
+                counter = 1
+
+                # Loop until a unique slug is found
+                while Product.objects.filter(slug=unique_slug).exists():
+                    unique_slug = f"{base_slug}-{counter}"
+                    counter += 1
+
+                self.slug = unique_slug
+
+            super().save(*args, **kwargs)
     
     def __str__(self) -> str:
         return self.product_name

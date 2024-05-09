@@ -1,0 +1,11 @@
+<!-- templates/customadmin/confirm_delete_product.html -->
+{% block content %}
+<h2>Confirm Delete Product</h2>
+<p>Are you sure you want to delete the product "{{ product.product_name }}"?</p>
+
+<form method="post">  <!-- POST request to confirm deletion -->
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>  <!-- Confirmation button -->
+    <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">Cancel</a>  <!-- Cancel button -->
+</form>
+{% endblock %}

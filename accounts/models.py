@@ -210,11 +210,10 @@ class Order(models.Model):
     def total_completed_orders(cls):
         return cls.objects.filter(status=OrderStatus.COMPLETED).count()
 
-    # Calculate the total price for an order
+
     def total_price(self):
-        return sum(item.subtotal for item in self.items.all())
-
-
+        # Use the subtotal method with parentheses to get the correct sum
+        return sum(item.subtotal() for item in self.items.all())
 
 # OrderItem model
 from django.db import models
@@ -228,6 +227,9 @@ class OrderItem(models.Model):
     def __str__(self):
         return f"{self.product.product_name} x {self.quantity}"
 
+    # Method to get total price for the order item
+    def subtotal(self):
+        return self.product.price * self.quantity  # Subtotal for this order item
 
 
 from django.db.models.signals import post_save
