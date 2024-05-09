@@ -1,15 +1,13 @@
-# customadmin/forms.py
 from django import forms
 from products.models import Product, ColorVariant, SizeVariant, ProductImage
 from django.forms import modelformset_factory
 
+# Form for creating a product
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['product_name', 'category', 'price', 'product_description', 'stock']
 
-from django.forms import modelformset_factory
-from products.models import ColorVariant, SizeVariant, ProductImage
 
 # Formset for color variants
 ColorVariantFormSet = modelformset_factory(
@@ -19,18 +17,29 @@ ColorVariantFormSet = modelformset_factory(
     can_delete=True  # Allow deletion
 )
 
+
 # Formset for size variants
 SizeVariantFormSet = modelformset_factory(
     SizeVariant,
-    fields=['size_name', 'price'],
+    fields=['size_name', 'price'],  # Include optional fields
     extra=1,  # Allows one empty form by default
-    can_delete=True
+    can_delete=True  # Allow deletion
 )
+
 
 # Formset for product images
 ProductImageFormSet = modelformset_factory(
     ProductImage,
     fields=['image'],  # Field for image uploads
-    extra=3,  # At least one empty form to start with
-    can_delete=True
+    extra=3,  # At least one empty form by default
+    can_delete=True  # Allow deletion
 )
+
+
+from django import forms
+from products.models import Coupon
+
+class CouponForm(forms.ModelForm):
+    class Meta:
+        model = Coupon
+        fields = ['coupon_code', 'discount_price', 'minimum_amount', 'is_expired']
