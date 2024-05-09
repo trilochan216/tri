@@ -53,10 +53,6 @@
                 <a href="#profile" class="active">Profile</a>
                 <hr align="center">
             </div>
-            <div class="url">
-                <a href="#settings">Settings</a>
-                <hr align="center">
-            </div>
         </div>
     </div>
     <!-- End -->
@@ -135,8 +131,74 @@
         });
         </script>
        
+
+<!-- Button to Track Orders -->
+<button type="button" class="btn btn-primary" onclick="toggleOrderDetails()">Track My Orders</button>
+
+<!-- Template for tracking orders in a table format -->
+
+
+<table class="table table-striped" id="order-details" style="display: none;">
+    
+    <thead>
+        <h2>Track My Orders</h2>
+        <tr>
+            <th>Order ID</th>
+            <th>Status</th>
+            <th>Created At</th>
+            <th>Total Amount</th>
+            <th>Actions</th>  <!-- Column for cancel action -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.get_status_display }}</td>  <!-- Display the status text -->
+            <td>{{ order.created_at }}</td>
+            <td>{{ order.total_amount }}</td>
+
+            <td>
+                {% if order.status == 'Processing' and order.can_cancel %}
+                <!-- Show cancel button if order is within 2 hours and is Processing -->
+                <a href="{% url 'cancel_order' order.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel this order?')">Cancel Order</a>
+                {% else %}
+                <!-- Display appropriate message or keep empty if no action -->
+                <span>No Action</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+
+
+
+
+<script>
+    function toggleOrderDetails() {
+        const orderSection = document.getElementById('order-details');  // Get the section by ID
+        
+        if (orderSection.style.display === 'none') {
+            orderSection.style.display = 'block';  // Show the section
+        } else {
+            orderSection.style.display = 'none';  // Hide the section
+        }
+    }
+    </script>
+    
+
+
     <!-- End -->
     <style>
+
+
+
+
+
 
         /* Import Font Dancing Script */
 @import url(https://fonts.googleapis.com/css?family=Dancing+Script);
@@ -148,8 +210,10 @@
 body {
     background-color: #e8f5ff;
     font-family: Arial;
-    overflow: hidden;
+    overflow: auto;  /* Allows scrolling */
 }
+
+
 
 /* NavbarTop */
 .navbar-top {
@@ -202,7 +266,7 @@ body {
     background-color: #fff;
     color: #333;
     border-bottom-right-radius: 25px;
-    height: 86%;
+    height: 200%;
     left: 0;
     overflow-x: hidden;
     padding-top: 20px;
@@ -336,6 +400,21 @@ body {
 .fa-snapchat:hover {
     color: #fffb01 !important;
 }
+
+.table {
+    width: 100%;  /* Full width */
+    border-collapse: collapse;  /* Ensure borders are collapsed */
+}
+
+.table th, .table td {
+    padding: 10px;  /* Add padding for spacing */
+    text-align: left;  /* Align text to the left */
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;  /* Stripe alternating rows for better readability */
+}
+
 
 /* End */
     </style>

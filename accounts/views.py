@@ -279,6 +279,8 @@ from .forms import UserEditForm, ProfileEditForm
 @login_required
 def user_profile(request):
     user = request.user
+    orders = Order.objects.filter(user=user).order_by('-created_at')  # Get all orders for the logged-in user
+    user = request.user
     profile = Profile.objects.get(user=user)
     print(f"User first name: {user.first_name}")  # Check if these are correct
     print(f"User last name: {user.last_name}")
@@ -304,6 +306,7 @@ def user_profile(request):
         profile_form = ProfileEditForm(instance=profile)
 
     context = {
+        'orders': orders,
         'user': user,
         'profile': profile,
         'user_form': user_form,
@@ -323,3 +326,18 @@ def logout_user(request):
     messages.success(request, "You have been logged out successfully.")
     return redirect('index')  # Redirect to the homepage or any other desired page
 
+
+
+
+@login_required
+def cancel_order(request, order_id):
+    order = Order.objects.get(pk=order_id, user=request.user)  # Get the order for the logged-in user
+
+    if order.can_cancel():
+        order.status = OrderStatus.CANCELED  # Update the order status to "Canceled"
+        order.save()
+        messages.success(request, "Your order has been canceled.")
+    else:
+        messages.error(request, "Order cancellation is allowed only within 2 hours of order creation.")
+
+    return redirect('user_profile')  # Redirect back to the orders page
