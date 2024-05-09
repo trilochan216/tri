@@ -309,20 +309,105 @@
         </div>
         <div class="modal-body">
 
-          {% load static %}  <!-- Load static files -->
-            <!-- templates/customadmin/dashboard.html -->
-            <form method="post" enctype="multipart/form-data">
-              {% csrf_token %}
-              {{ form.as_p }}
+          {% load static %} 
+          
+          
+
+          <form method="post" enctype="multipart/form-data">  <!-- Required for file uploads -->
+            {% csrf_token %}
+            {{ form.as_p }}  <!-- Render the main product form -->
+        
+            <!-- Render color variants -->
+            {{ color_formset.management_form }}  <!-- Ensure management form is included -->
+            <h3>Color Variants</h3>
+            <div id="color-section">
+                {% for color_form in color_formset %}
+                    {{ color_form.as_p }}
+                {% endfor %}
+            </div>
+            <button type="button" onclick="addColorVariant()">+ Add Color Variant</button>
+        
+            <!-- Render size variants -->
+            {{ size_formset.management_form }}
+            <h3>Size Variants</h3>
+            <div id="size-section">
+                {% for size_form in size_formset %}
+                    {{ size_form.as_p }}
+                {% endfor %}
+            </div>
+            <button type="button" onclick="addSizeVariant()">+ Add Size Variant</button>
+        
+            <!-- Render product images -->
+            {{ image_formset.management_form }}
+            <h3>Product Images</h3>
+            <div id="image-section">
+                {% for image_form in image_formset %}
+                    {{ image_form.as_p }}
+                {% endfor %}
+            </div>
+            <button type="button" onclick="addImage()">+ Add Product Image</button>
+        
+            <button type="submit">Add Product</button>
+        </form>
+        
+      <script>
+        // JavaScript to add color variants dynamically
+        function addColorVariant() {
+          const colorSection = document.getElementById('color-section');
+          const colorFormsetTotal = document.querySelector('[name=color-TOTAL_FORMS]');
+          const currentForms = parseInt(colorFormsetTotal.value, 10);
       
-              <!-- Product Images Formset -->
-              {{ formset.management_form }}
-              {% for form in formset %}
-                  {{ form.as_p }}
-              {% endfor %}
-              
-              <button type="submit">Add Product</button>
-          </form>     
+          if (currentForms < 5) {  // Limit to avoid excessive form addition
+              const newColorForm = document.createElement('div');
+              newColorForm.innerHTML = '{{ color_formset.empty_form.as_p|escapejs }}';  // Ensure correct form rendering
+              colorFormsetTotal.value = currentForms + 1;  // Increment the form count
+              colorSection.appendChild(newColorForm);  // Add to the DOM
+          } else {
+              alert('Maximum 5 color variants allowed.');
+          }
+      }
+      
+      
+
+// JavaScript to add size variants dynamically
+function addSizeVariant() {
+  const sizeSection = document.getElementById('size-section');
+  const sizeFormsetTotal = document.querySelector('[name=size-TOTAL_FORMS]');
+  const currentForms = parseInt(sizeFormsetTotal.value, 10);
+
+  if (currentForms < 5) {  // Limit to avoid excessive form addition
+      const newSizeForm = document.createElement('div');
+      newSizeForm.innerHTML = '{{ size_formset.empty_form.as_p|escapejs }}';  // Correct form rendering
+      sizeFormsetTotal.value = currentForms + 1;  // Increment the form count
+      sizeSection.appendChild(newSizeForm);  // Add to the DOM
+  } else {
+      alert('Maximum 5 size variants allowed.');
+  }
+}
+
+function addImage() {
+  const imageSection = document.getElementById('image-section');
+  const imageFormsetTotal = document.querySelector('[name=image-TOTAL_FORMS]');
+  const currentForms = parseInt(imageFormsetTotal.value, 10);
+
+  if (currentForms < 5) {  // Limit to avoid excessive form addition
+      const newImageForm = document.createElement('div');
+      newImageForm.innerHTML = '{{ image_formset.empty_form.as_p|escapejs }}';  // Ensure correct form rendering
+      imageFormsetTotal.value = currentForms + 1;  // Increment the form count
+      imageSection.appendChild(newImageForm);  // Add to the DOM
+  } else {
+      alert('Maximum 5 images allowed.');
+  }
+}
+
+
+      </script>        
+
+
+          
+          
+
+
         </div>
       </div>
     </div>

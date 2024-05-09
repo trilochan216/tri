@@ -51,9 +51,9 @@ class Product(BaseModel):
     
     
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.product_name)
-        super(Product, self).save(*args, **kwargs)
-        
+        if not self.slug:
+            self.slug = slugify(self.product_name)
+        super().save(*args, **kwargs)
     
     def __str__(self) -> str:
         return self.product_name
