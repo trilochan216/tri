@@ -267,3 +267,59 @@ def checkout(request):
             return redirect("cart")  # Redirect back to cart if validation fails
 
     return redirect("cart")  # Redirect to cart if method is not POST
+
+
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import Profile
+from .forms import UserEditForm, ProfileEditForm
+
+@login_required
+def user_profile(request):
+    user = request.user
+    profile = Profile.objects.get(user=user)
+    print(f"User first name: {user.first_name}")  # Check if these are correct
+    print(f"User last name: {user.last_name}")
+
+    if request.method == 'POST':
+        user_form = UserEditForm(request.POST, instance=user)
+        profile_form = ProfileEditForm(request.POST, request.FILES, instance=profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, "Profile updated successfully!")
+            print(f"User's first name after saving: {user.first_name}")
+            print(f"User's last name after saving: {user.last_name}")
+            return redirect(request.path)  # Redirect to the same page after update
+        
+
+
+        messages.error(request, "Failed to update profile. Please check your inputs.")
+    
+    else:
+        user_form = UserEditForm(instance=user)
+        profile_form = ProfileEditForm(instance=profile)
+
+    context = {
+        'user': user,
+        'profile': profile,
+        'user_form': user_form,
+        'profile_form': profile_form,
+    }
+
+    return render(request, 'accounts/Profile.html', context)
+
+from django.shortcuts import redirect
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
+@login_required
+def logout_user(request):
+    logout(request)  # Ends the user's session
+    messages.success(request, "You have been logged out successfully.")
+    return redirect('index')  # Redirect to the homepage or any other desired page
+
