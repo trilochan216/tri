@@ -206,8 +206,11 @@ ACCOUNT_LOGOUT_REDIRECT_URL = '/'  # or the URL you want users to be redirected 
 LOGIN_URL = '/admin/login/' 
 
 import os
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+MEDIA_URL = '/media/'  # Public URL for serving media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Directory where media files are stored
+
 
 
 from django.conf import settings
@@ -219,8 +222,3 @@ urlpatterns = [
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
-# In settings.py
-STATIC_URL = '/static/'  # URL path to access static files
-STATICFILES_DIRS = [  # Directories for static files
-    BASE_DIR / "static",
-]
