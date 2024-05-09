@@ -104,6 +104,9 @@
         .social-login button:hover {
             opacity: 0.8;
         }
+        .login{
+            color: red;
+        }
     </style>
     <div class="registration-container">
         <h2>Register</h2>
@@ -127,7 +130,7 @@
         </div> {% endcomment %}
         <div>
             {% comment %} suman paudel {% endcomment %}
-           <span> Already have account</span> <a href='{% url 'login' %}'>Login</a>
+           <span> Already have account</span> <a href='{% url 'login' %}' class="login">Login</a>
         </div>
     </div>
 

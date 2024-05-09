@@ -171,7 +171,23 @@
                     <li><a href="#">Products</a></li>
                     <li><a href="#">About</a></li>
                     <li><a href="#">Contact</a></li>
-                    <li><a  href='{% url 'register' %}'>Account</a></li>
+                    {% if user.is_authenticated %}
+                    <!-- If user is logged in, show profile picture in a circle -->
+                    <li>
+                        <a href="{% url 'user_profile' %}">  <!-- This should be the URL for the user profile -->
+                            {% if user.profile.profile_image %}
+                                <img src="{{ user.profile.profile_image.url }}" alt="User Profile" class="img-circle" style="width: 30px; height: 30px; border-radius: 50%;">  <!-- Circular profile picture -->
+                            {% else %}
+                                <img src="{% static 'images/default_profile.png' %}" alt="Default Profile" class="img-circle" style="width: 30px; height: 30px; border-radius: 50%;">  <!-- Default image if no profile picture -->
+                            {% endif %}
+                        </a>
+                    </li>
+                    {% else %}
+                    <!-- If user is not logged in, show 'Account' link to the registration page -->
+                    <li>
+                        <a href="{% url 'register' %}">Account</a>  <!-- This should be the URL for registration -->
+                    </li>
+                    {% endif %}
                 </ul>
             </nav>
             <div class="count_cart">
