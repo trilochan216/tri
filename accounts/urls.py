@@ -1,6 +1,6 @@
 
 from django.urls import path
-from accounts.views import login_page, logout_user,register_page, activate_email, add_to_cart, cart, remove_cart, remove_coupon, user_profile
+from accounts.views import cancel_order, login_page, logout_user,register_page, activate_email, add_to_cart, cart, remove_cart, remove_coupon, user_profile
 from products import views
 from accounts.views import checkout
 
@@ -15,4 +15,5 @@ urlpatterns = [
   path('checkout/', checkout, name='checkout'),
   path('profile/', user_profile, name='user_profile'),
   path('logout/', logout_user, name='logout_user'),
+  path('cancel-order/<int:order_id>/', cancel_order, name='cancel_order'),  # URL for canceling an order
 ]

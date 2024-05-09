@@ -214,6 +214,12 @@ class Order(models.Model):
     def total_price(self):
         # Use the subtotal method with parentheses to get the correct sum
         return sum(item.subtotal() for item in self.items.all())
+    
+    
+    def can_cancel(self):
+        # Allow cancellation within 2 hours of order creation
+        return (timezone.now() - self.created_at).total_seconds() < 7200  # 2 hours in seconds
+
 
 # OrderItem model
 from django.db import models
