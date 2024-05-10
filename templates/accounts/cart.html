@@ -80,12 +80,6 @@
             color: black;  // This sets the text color to black
         }
         
-        .apply-section {
-            margin: 20px 0;  // Add some spacing around the section
-            text-align: left;
-            margin-top: 267px;
-            margin-left: 93px;
-        }
         
         
         .apply-section input {
@@ -113,10 +107,22 @@
         
           .cart-page {
             flex: 3;  /* Occupies 3 parts of the flex space (60%) */
+            padding: 20px;
+            background-color: #f5f5f5;
+            /* This box-shadow creates a subtle shadow effect */
+            box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.2);
           }
         
           .apply-section {
             flex: 2;  /* Occupies 2 parts of the flex space (40%) */
+            padding: 54px;
+            background-color: #f5f5f5;
+            /* This box-shadow creates a subtle shadow effect */
+            box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.2);
+            margin-top: 82px;
+            margin-left: 24px;
+            margin-bottom: 78px;
+            
           }
           .btn-success {
             background-color: green;  /* Green background for success */
@@ -195,7 +201,7 @@
 </style>
 <html>
 <div class="flex-container">
-    <div class="small-container cart-page">
+<div class="small-container cart-page">
     <table> 
         <tr>
             <th>Product</th>
@@ -304,6 +310,7 @@
             </div>   
     </div>
     </div>
+</div>
 <div class="apply-section">
     <form method="POST">
         {% include "base/alert.html" %}
@@ -318,7 +325,7 @@
     <a href="{% url 'remove_coupon' cart.uid %}" class="button">{{cart.coupon.coupon_code}}</a>
     {% endif %}
 </div>
-</div>
+
 </html>
 <script>
     // Function to open the modal

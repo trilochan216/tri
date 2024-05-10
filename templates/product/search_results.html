@@ -1,0 +1,63 @@
+{% extends 'base/base.html' %}
+
+{% block start %}
+  <h2>Search Results for "{{ query }}"</h2>
+  <div class="small-container">
+    <div class="row">
+      {% if results and results|length > 0 %}
+        {% for product in results %}
+          <div class="col-4">
+            <a class="pr" href="{% url 'get_product' product.slug %}">
+              <img src="/media/{{ product.product_images.first.image }}" alt="{{ product.product_name }}">
+              <h4 class="pro"><b>product_name:{{ product.product_name }}</b></h4>
+              <div class="rating">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-regular fa-star"></i>
+              </div>
+              <p>Rs. {{ product.price }}</p>
+              <p>Description:{{ product.product_description }}</p>
+            </a>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>No products found matching "{{ query }}".</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <style>
+    .row{
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: space-around;
+  }
+  .col-4{
+    flex-basis: 25%;
+    padding: 10px;
+    min-width: 200px;
+    margin-bottom: 50px;
+    transition: transform 0.5s;
+}
+.col-4 img{
+    width: 80%;
+    height:80%;
+}
+.rating .fa{
+  color: #ff523b;
+}
+.col-4:hover{
+  transform: translateY(-5px);
+}
+.pr {
+  text-decoration: none;
+  color: #000000;
+}
+p{
+  color: #000000;
+}
+  </style>
+{% endblock %}
