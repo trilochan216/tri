@@ -276,7 +276,8 @@ from django.contrib import messages
 from .models import Profile
 from .forms import UserEditForm, ProfileEditForm
 
-@login_required
+
+@login_required(login_url=login)
 def user_profile(request):
     user = request.user
     orders = Order.objects.filter(user=user).order_by('-created_at')  # Get all orders for the logged-in user
