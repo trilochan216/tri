@@ -1,6 +1,6 @@
 from django.shortcuts import redirect
 from django.urls import path
-from customadmin.views import admin_login, admin_dashboard, admin_logout, delete_coupon, delete_order, delete_product, update_order_status 
+from customadmin.views import admin_login, admin_dashboard, admin_logout, delete_coupon, delete_order, delete_product, seller_dashboard, seller_login, seller_logout,  seller_registration, update_order_status 
 from customadmin.views import admin_dashboard
 # update_product, add_product_image
 
@@ -19,6 +19,10 @@ urlpatterns = [
     # path('products/update/<int:product_id>/', update_product, name='update_product'),  # Update product
     # path('products/add-image/', add_product_image, name='add_product_image'),
     #  path('user-list/', user_list, name='user_list'),
+    path('seller/register/', seller_registration, name='seller_registration'),
+    path('seller/login/', seller_login, name='seller_login'),
+    path('seller/',seller_dashboard, name='seller_dashboard'),
+    path('seller/logout/', seller_logout, name='seller_logout'),
 ]
 
 from django.conf import settings

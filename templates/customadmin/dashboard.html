@@ -123,12 +123,6 @@
       {% endfor %}
   </tbody>
 </table>
-
-
-
-
-
-
       </div>
     </div>
   </div>
@@ -227,29 +221,36 @@
           <h2>Recent Sellers</h2>
           <table class="table">
             <thead class="thead-dark">
-              <tr>
-                <th scope="col">Seller ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Contact Number</th>
-                <th scope="col">Date of Joined</th>
-                <th scope="col">Actions</th>
-              </tr>
+                <tr>
+                    <th scope="col">Seller ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Contact Number</th>
+                    <th scope="col">Date of Joined</th>
+                    <th scope="col">Actions</th>
+                </tr>
             </thead>
             <tbody>
-              <!-- Sample data, replace with dynamic data -->
-              <tr>
-                <th scope="row">1</th>
-                <td>Ram Bahadur</td>
-                <td>example.com</td>
-                <td>+2356457631</td>
-                <td>21st December,2023</td>
-                <td><button class="btn btn-danger delete-user-btn">Delete</button></td>
-              </tr>
-              <tr>
-              <!-- Mor-->
+                <!-- Loop through sellers and display data -->
+                {% for seller in sellers %}
+                <tr {% if seller.is_verified %} class="table-success" {% else %} class="table-danger" {% endif %}>
+                    <th scope="row">{{ seller.id }}</th>
+                    <td>{{ seller.name }}</td>
+                    <td>{{ seller.email }}</td>
+                    <td>{{ seller.phone }}</td>
+                    <td>{{ seller.date_joined|date:"jS F, Y" }}</td>
+                    <td>
+                      <form method="post" class="verify-seller-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="seller_id" value="{{ seller.id }}">
+                            <!-- Replace the button with Delete button -->
+                            <button type="submit" class="btn btn-success verify-seller-btn">Verify</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
             </tbody>
-          </table>
+        </table>
 
         </div>
       </div>
@@ -260,7 +261,6 @@
     <div class="container mt-4 ml-5">
       <div class="row">
         <div class="col-md-12">
-          <button class="btn btn-primary" id="addSellerBtn" onclick="openModal()">Add Seller</button>
         </div>
         
         <div id="addSellerModal" class="modal" style="display: none;">
@@ -461,6 +461,28 @@
             }
           }
 
+    // Get all forms with class "verify-seller-form"
+    const verifySellerForms = document.querySelectorAll('.verify-seller-form');
+
+    verifySellerForms.forEach(form => {
+        // Find the corresponding button inside each form
+        const verifySellerBtn = form.querySelector('.verify-seller-btn');
+
+        // Check if the button needs to be disabled
+        const isVerified = form.parentElement.classList.contains('table-success');
+        if (isVerified) {
+            // If seller is verified, disable the button
+            verifySellerBtn.disabled = true;
+            verifySellerBtn.classList.add('disabled');
+        }
+
+        // Add event listener to prevent form submission when the button is disabled
+        verifySellerBtn.addEventListener('click', function(event) {
+            if (verifySellerBtn.disabled) {
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+    });
 
         </script>               
 
