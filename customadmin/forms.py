@@ -43,3 +43,20 @@ class CouponForm(forms.ModelForm):
     class Meta:
         model = Coupon
         fields = ['coupon_code', 'discount_price', 'minimum_amount', 'is_expired']
+
+
+
+from django import forms
+from .models import Seller
+
+class SellerRegistrationForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+
+    class Meta:
+        model = Seller
+        fields = ['name', 'email', 'phone', 'address', 'password']
+
+
+class SellerLoginForm(forms.Form):
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)

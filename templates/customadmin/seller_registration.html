@@ -1,0 +1,44 @@
+<!-- Add this link in the <head> section of your HTML file -->
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+<!-- seller_registration.html -->
+<div class="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        Register as a Seller
+      </h2>
+    </div>
+  
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          <!-- seller_registration.html -->
+          <form method="POST" class="space-y-6">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div>
+                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Register
+                </button>
+            </div>
+          </form>
+
+        {% if messages %}
+        <ul class="mt-4">
+          {% for message in messages %}
+          <li class="text-red-600">{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+    </div>
+  
+    <div class="mt-6 sm:mx-auto sm:w-full sm:max-w-md">
+      <p class="text-center text-sm text-gray-600">
+        Already have an account? <a href="{% url 'seller_login' %}" class="font-medium text-indigo-600 hover:text-indigo-500">
+          Login
+        </a>
+      </p>
+    </div>
+  </div>
+  
+  

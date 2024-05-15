@@ -1,0 +1,139 @@
+<!-- seller_dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard</title>
+    <!-- Include Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="font-sans antialiased bg-gray-100">
+<div class="flex h-screen">
+    <!-- Sidebar -->
+    <div class="w-1/10 h-screen fixed top-0 left-0 z-50 bg-gray-900 text-gray-100 ">
+        <div class="py-7 px-8 bg-gray-800">
+            <h1 class="text-2xl font-semibold">Seller Dashboard</h1>
+        </div>
+        <nav class="flex-1 px-7 py-14 h-200 top-0">
+            <a href="#product" class="block py-8 px-10 hover:bg-gray-800">Product</a>
+            <a href="#add-token" class="block py-4 px-8 hover:bg-gray-800">Add Token</a>
+            <a href="#user-profile" class="block py-4 px-8 hover:bg-gray-800">User Profile</a>
+            <a href="#add-product" class="block py-4 px-8 hover:bg-gray-800">Add Product</a>
+            <!-- Include your custom JS -->
+            <form action="{% url 'seller_logout' %}" method="post">
+                {% csrf_token %}
+                <button class="hehe" type="submit">Logout</button>
+            </form>
+        </nav>
+        <!-- You can add a logout button or other options here -->
+    </div>
+
+    <!-- Content area -->
+    <div class=" mr-1/4 w-3/4 suman">
+        <!-- Product tab -->
+        <div id="product" class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Products</h2>
+            <div class="grid grid-cols-3 gap-4">
+                <!-- Display product cards here -->
+                {% for product in products %}
+                    <div class="bg-white shadow-md rounded-lg p-6">
+                        {% with product.product_images.first as product_image %}
+                            {% if product_image and product_image.image %}
+                                <!-- Product image -->
+                                <img src="{{ product_image.image.url }}" alt="{{ product.product_name }}" class="w-32 h-32 object-cover mb-4">
+                            {% endif %}
+                        {% endwith %}
+                        <h3 class="text-lg font-semibold">{{ product.product_name }}</h3>
+                        <p class="text-gray-500">{{ product.product_description }}</p>
+                        <p class="text-gray-700 mt-2">Price: Rs{{ product.price }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Add Token tab -->
+        <div id="add-token" class="mb-8 hidden">
+            <h2 class="text-2xl font-semibold mb-4">Add Coupon</h2>
+            <div id="add-coupon-modal" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50  flex justify-center items-center">
+                <div class="bg-white p-8 rounded-md">
+                    <h2 class="text-2xl font-semibold mb-4">Add Coupon</h2>
+                    <form  method="post">
+                        {% csrf_token %}
+                        {{ coupon_form.as_p }}
+                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Add Coupon</button>
+                    </form>
+                    <button id="close-modal" class="absolute top-0 right-0 mt-2 mr-2 text-gray-700 hover:text-gray-900">&times;</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Profile tab -->
+        <div id="user-profile" class="mb-8 hidden">
+            <h2 class="text-2xl font-semibold mb-4">User Profile</h2>
+            <p>This is the user profile tab content. You can add your user profile-related content here.</p>
+        </div>
+
+        <!-- Add Product tab -->
+        <div id="add-product" class="mb-8 hidden">
+        </div>
+
+        <!-- Coupon tab -->
+
+
+        <!-- Display Coupons -->
+        <div id="coupons" class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Coupons</h2>
+            <div>
+                <!-- Display coupon information -->
+                {% for coupon in coupons %}
+                    <div class="bg-white shadow-md rounded-lg p-6 mb-4">
+                        <h3 class="text-lg font-semibold">Coupon Code: {{ coupon.coupon_code }}</h3>
+                        <p class="text-gray-500">Discount Amount: {{ coupon.discount_price }}</p>
+                        <p class="text-gray-500">Maximum Amount : {{ coupon.minimum_amount }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Tailwind CSS for responsive classes -->
+<script src="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.js"></script>
+
+<!-- Include JavaScript to toggle visibility of tabs -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get all tab links
+        const tabLinks = document.querySelectorAll('[href^="#"]');
+
+        // Add click event listener to each tab link
+        tabLinks.forEach(function(link) {
+            link.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default link behavior
+
+                // Get the target tab ID from the href attribute
+                const targetId = this.getAttribute('href').substring(1);
+
+                // Hide all tabs
+                document.querySelectorAll('.content > div').forEach(function(tab) {
+                    tab.classList.add('hidden');
+                });
+
+                // Show the target tab
+                document.getElementById(targetId).classList.remove('hidden');
+            });
+        });
+    });
+</script>
+<style>
+    .hehe{
+        padding-left: 38px;
+        padding-top: 105px;
+    }
+    .suman{
+        margin-left: 315px;
+    }
+</style>
+</body>
+</html>

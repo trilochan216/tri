@@ -55,64 +55,6 @@ from products.models import Product, ColorVariant, SizeVariant, ProductImage
 from django.contrib.auth.decorators import login_required
 
 
-# @login_required
-# def admin_dashboard(request):
-#     form = ProductForm()  # Main product form
-#     color_formset = ColorVariantFormSet(queryset=ColorVariant.objects.none())  # Initialize with no data
-#     size_formset = SizeVariantFormSet(queryset=SizeVariant.objects.none())  # Initialize with no data
-#     image_formset = ProductImageFormSet(queryset=ProductImage.objects.none())  # Initialize with no data
-
-#     if request.method == 'POST':
-#         form = ProductForm(request.POST, request.FILES)  # Include FILES for file uploads
-#         color_formset = ColorVariantFormSet(request.POST, request.FILES)  # Reinitialize with POST data
-#         size_formset = SizeVariantFormSet(request.POST, request.FILES)  # Reinitialize with POST data
-#         image_formset = ProductImageFormSet(request.POST, request.FILES)  # Reinitialize with POST data
-
-#         if form.is_valid() and image_formset.is_valid():  # Ensure required forms are valid
-#             product = form.save(commit=False)  # Save without committing
-#             product.save()  # Save the product to the database
-
-#             # Optional handling for color variants
-#             if color_formset.is_valid():  # Ensure formset is valid
-#                 for color_form in color_formset:
-#                     if color_form.cleaned_data:  # Ensure there's valid data
-#                         color_instance = color_form.save(commit=False)
-#                         color_instance.save()  # Save the color variant
-#                         product.color_variant.add(color_instance)  # Associate with the product
-
-#             # Optional handling for size variants
-#             if size_formset.is_valid():
-#                 for size_form in size_formset:
-#                     if size_form.cleaned_data:  # Ensure there's valid data
-#                         size_instance = size_form.save(commit=False)
-#                         size_instance.save()  # Save the size variant
-#                         product.size_variant.add(size_instance)  # Associate with the product
-
-#             # Required handling for product images
-#             if image_formset.is_valid():
-#                 for image_form in image_formset:
-#                     if image_form.cleaned_data:
-#                         image_instance = image_form.save(commit=False)
-#                         image_instance.product = product  # Associate with the product
-#                         image_instance.save()  # Save the image
-
-#             return redirect('admin_dashboard')  # Redirect after successful save
-
-#     # Context to pass to the template
-#     context = {
-#         'products': Product.objects.all(),  # All products
-#         'users': User.objects.exclude(username='admin'),  # All non-admin users
-#         'form': form,  # Product form
-#         'color_formset': color_formset,  # Formset for color variants
-#         'size_formset': size_formset,  # Formset for size variants
-#         'image_formset': image_formset,  # Formset for product images
-#     }
-
-#     return render(request, 'customadmin/dashboard.html', context)  # Render the dashboard template
-
-
-
-
 
 
 from django.shortcuts import render, redirect
@@ -122,6 +64,19 @@ from products.models import Product
 from django.contrib.auth.models import User
 
 def admin_dashboard(request):
+    
+    
+    sellers = Seller.objects.all()
+
+    if request.method == 'POST':
+        # Check if the request is for verifying a seller
+        if 'verify_seller' in request.POST:
+            seller_id = request.POST.get('seller_id')
+            seller = Seller.objects.get(pk=seller_id)
+            seller.is_verified = True
+            seller.save()
+            # Redirect to avoid resubmission
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER')) 
     # Fetch all orders
     orders = Order.objects.all()
     
@@ -218,6 +173,7 @@ def admin_dashboard(request):
         'color_formset': color_formset,
         'size_formset': size_formset,
         'image_formset': image_formset,
+        'sellers': sellers,
     }
 
     return render(request, 'customadmin/dashboard.html', context)
@@ -330,81 +286,97 @@ def delete_coupon(request, coupon_code):
 
 
 
+# views.py
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .forms import SellerRegistrationForm
+
+def seller_registration(request):
+    if request.method == 'POST':
+        form = SellerRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Registration successful. You can now login.')
+            return redirect('seller_login')  # Assuming 'seller_login' is the name of your login URL
+        else:
+            messages.error(request, 'Form submission failed. Please correct errors.')
+    else:
+        form = SellerRegistrationForm()
+    return render(request, 'customadmin/seller_registration.html', {'form': form})
 
 
 
-# from django.shortcuts import render, redirect
-# from django.contrib.auth.decorators import login_required
-# from products.models import Product, ColorVariant, SizeVariant, ProductImage
-# from customadmin.forms import ProductForm, ColorVariantForm, SizeVariantForm, ProductImageForm
+from django.shortcuts import render, redirect
+from django.contrib.auth.hashers import check_password
+from django.contrib import messages
+from .forms import SellerLoginForm
+from .models import Seller
+
+def seller_login(request):
+    if request.method == 'POST':
+        form = SellerLoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            try:
+                seller = Seller.objects.get(email=email)
+                if check_password(password, seller.password):
+                    if seller.is_verified:
+                        # Authentication successful
+                        # Set session variables or login user if needed
+                        messages.success(request, 'Login successful.')
+                        return redirect('seller_dashboard')
+                    else:
+                        # Seller is not verified
+                        messages.error(request, 'Your account is not verified yet.')
+                else:
+                    messages.error(request, 'Invalid email or password.')
+            except Seller.DoesNotExist:
+                messages.error(request, 'Invalid email or password.')
+    else:
+        form = SellerLoginForm()
+    return render(request, 'customadmin/seller_login.html', {'form': form})
 
 
 
+# views.py
+# views.py
 
+# views.py
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .forms import CouponForm
+from products.models import Coupon
 
-# @login_required
-# def add_product(request):
-#     if request.method == 'POST':
-#         product_form = ProductForm(request.POST, request.FILES)  # Form handling for POST
-#         if product_form.is_valid():
-#             product_form.save()  # Save the product
-#             return redirect('admin_dashboard')  # Redirect after saving
-#     else:
-#         product_form = ProductForm()  # Form initialization for GET
+@login_required(login_url='seller_login')
+def seller_dashboard(request):
+    # Fetch products, orders, and coupons
+    products = Product.objects.all()
+    orders = Order.objects.all()
+    coupons = Coupon.objects.all()
+    coupon_form = CouponForm()  # Add coupon form instance
     
-#     context = {
-#         'product_form': product_form,  # Pass the form to the template
-#     }
+    if request.method == 'POST':
+        coupon_form = CouponForm(request.POST)
+        if coupon_form.is_valid():
+            coupon_form.save()
+            messages.success(request, 'Coupon added successfully.')
+            return redirect('seller_dashboard')
+        else:
+            messages.error(request, 'Invalid coupon data.')
     
-#     return render(request, 'customadmin/dashboard.html', context)  # Ensure the correct template is rendered
+    return render(request, 'customadmin/seller_dashboard.html', {'products': products, 'orders': orders, 'coupons': coupons, 'coupon_form': coupon_form})
 
 
 
 
+from django.contrib.auth import logout
+from django.shortcuts import redirect
 
-
-
-
-
-
-
-# @login_required
-# def update_product(request, product_id):
-#     product = get_object_or_404(Product, id=product_id)  # Get the product by ID
-#     if request.method == 'POST':
-#         product_form = ProductForm(request.POST, request.FILES, instance=product)  # Handle form submission
-#         if product_form.is_valid():
-#             product_form.save()  # Save the updated product
-#             return redirect('admin_dashboard')  # Redirect after successful update
-#     else:
-#         product_form = ProductForm(instance=product)  # Prefill form with existing data
-    
-#     context = {
-#         'product_form': product_form,
-#     }
-    
-#     return render(request, 'customadmin/dashboard.html', context)  # Render the form
-
-
-
-# @login_required
-# def add_product_image(request, product_id):
-#     product = get_object_or_404(Product, id=product_id)  # Get the product by ID
-#     if request.method == 'POST':
-#         image_form = ProductImageForm(request.POST, request.FILES)  # Handle image uploads
-#         if image_form.is_valid():
-#             # Create and associate the new image with the product
-#             product_image = image_form.save(commit=False)
-#             product_image.product = product  # Associate with the product
-#             product_image.save()  # Save the new product image
-            
-#             return redirect('update_product', product_id=product_id)  # Redirect back to update_product
-#     else:
-#         image_form = ProductImageForm()  # Initial GET request
-    
-#     context = {
-#         'product': product,
-#         'image_form': image_form,
-#     }
-    
-#     return render(request, 'customadmin/dashboard.html', context)  # Render the form
+def seller_logout(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('seller_login')
+    else:
+        # Handle GET requests, if needed
+        pass
