@@ -18,6 +18,7 @@ from accounts.models import Cart
 from products.models import Product
 from django.views.decorators.http import require_POST
 from accounts.forms import CheckoutForm
+from django.contrib.auth.password_validation import validate_password, ValidationError
    
     
 # Create your views here.
@@ -65,6 +66,13 @@ def register_page(request):
             messages.warning(request, 'Email is already taken. ')
             return HttpResponseRedirect(request.path_info)
         
+                # Validate the password
+        try:
+            validate_password(password)
+        except ValidationError as e:
+            for error in e:
+                messages.error(request, error)
+            return HttpResponseRedirect(request.path_info)
         
         
         user_obj = User.objects.create(first_name=first_name, last_name=last_name, email=email, username=email)
