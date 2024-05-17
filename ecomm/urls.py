@@ -21,16 +21,16 @@ from django.conf import settings
 from django.urls import path # Import your custom admin site
 
 
+
 urlpatterns = [
     path('', include('home.urls')),
     path('', include('customadmin.urls')),
     path('product/', include('products.urls')),
     path('accounts/', include('accounts.urls')),
     path('dj-admin/', admin.site.urls),
-    path('accounts/', include('allauth.urls')),
-    
-    
+    path('accounts/', include('allauth.urls')),   
 ]
+
 
 
 

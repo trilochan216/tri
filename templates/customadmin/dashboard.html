@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> 
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body>
   <div class="sidebar">
@@ -219,6 +220,7 @@
       <div class="row">
         <div class="col-md-12">
           <h2>Recent Sellers</h2>
+
           <table class="table">
             <thead class="thead-dark">
                 <tr>
@@ -233,24 +235,26 @@
             <tbody>
                 <!-- Loop through sellers and display data -->
                 {% for seller in sellers %}
-                <tr {% if seller.is_verified %} class="table-success" {% else %} class="table-danger" {% endif %}>
+                <tr class="{% if seller.is_verified %}table-success{% else %}table-danger{% endif %}">
                     <th scope="row">{{ seller.id }}</th>
                     <td>{{ seller.name }}</td>
                     <td>{{ seller.email }}</td>
                     <td>{{ seller.phone }}</td>
                     <td>{{ seller.date_joined|date:"jS F, Y" }}</td>
                     <td>
-                      <form method="post" class="verify-seller-form">
+                        <form method="POST" class="verify-seller-form">
                             {% csrf_token %}
                             <input type="hidden" name="seller_id" value="{{ seller.id }}">
                             <!-- Replace the button with Delete button -->
-                            <button type="submit" class="btn btn-success verify-seller-btn">Verify</button>
+                            <button type="submit" class="btn btn-success verify-seller-btn" {% if seller.is_verified %}disabled{% endif %}>Verify</button>
                         </form>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        
+
 
         </div>
       </div>
@@ -372,44 +376,60 @@
 
           {% load static %} 
           
-          
 
-          <form method="post" enctype="multipart/form-data">  <!-- Required for file uploads -->
-            {% csrf_token %}
-            {{ form.as_p }}  <!-- Render the main product form -->
-        
-            <!-- Color variants -->
-            {{ color_formset.management_form }}  <!-- Ensure management form is included -->
-            <h3>Color Variants</h3>
-            <div id="color-section">
-                {% for color_form in color_formset %}
-                    {{ color_form.as_p }}  <!-- Render each color form -->
-                {% endfor %}
-            </div>
-            <button type="button" onclick="addColorVariant()">+ Add Color Variant</button>  <!-- Ensure proper event binding -->
-        
-            <!-- Size variants -->
-            {{ size_formset.management_form }}
-            <h3>Size Variants</h3>
-            <div id="size-section">
-                {% for size_form in size_formset %}
-                    {{ size_form.as_p }}  <!-- Render each size form -->
-                {% endfor %}
-            </div>
-            <button type="button" onclick="addSizeVariant()">+ Add Size Variant</button>  <!-- Ensure proper event binding -->
-        
-            <!-- Product images -->
-            {{ image_formset.management_form }}  <!-- Ensure management form is included -->
-            <h3>Product Images</h3>
-            <div id="image-section">
-                {% for image_form in image_formset %}
-                    {{ image_form.as_p }}  <!-- Render each image form -->
-                {% endfor %}
-            </div>
-            <button type="button" onclick="addImage()">+ Add Product Image</button>  <!-- Ensure proper event binding -->
-        
-            <button type="submit">Add Product</button>
-        </form>
+          <div class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-gray-200 shadow-md rounded-lg overflow-auto">
+            <form method="post" enctype="multipart/form-data" class="space-y-8 bg-gray-100 p-8 rounded-lg">
+                {% csrf_token %}
+                <div class="space-y-6">
+                    <h2 class="text-2xl font-bold leading-tight text-gray-900">Main Product Details</h2>
+                    {{ form.as_p }}
+                </div>
+    
+                <!-- Color variants -->
+                <div class="space-y-6">
+                    {{ color_formset.management_form }}
+                    <h3 class="text-xl font-semibold leading-tight text-gray-800">Color Variants</h3>
+                    <div id="color-section" class="space-y-4">
+                        {% for color_form in color_formset %}
+                            <div class="p-4 border border-gray-300 rounded-lg bg-gray-50">
+                                {{ color_form.as_p }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button type="button" class="mt-4 inline-flex items-center px-4 py-2 bg-black border border-transparent rounded-md font-semibold text-white hover:bg-gray-800 focus:outline-none" onclick="addColorVariant()">+ Add Color Variant</button>
+                </div>
+    
+                <!-- Size variants -->
+                <div class="space-y-6">
+                    {{ size_formset.management_form }}
+                    <h3 class="text-xl font-semibold leading-tight text-gray-800">Size Variants</h3>
+                    <div id="size-section" class="space-y-4">
+                        {% for size_form in size_formset %}
+                            <div class="p-4 border border-gray-300 rounded-lg bg-gray-50">
+                                {{ size_form.as_p }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button type="button" class="mt-4 inline-flex items-center px-4 py-2 bg-black border border-transparent rounded-md font-semibold text-white hover:bg-gray-800 focus:outline-none" onclick="addSizeVariant()">+ Add Size Variant</button>
+                </div>
+    
+                <!-- Product images -->
+                <div class="space-y-6">
+                    {{ image_formset.management_form }}
+                    <h3 class="text-xl font-semibold leading-tight text-gray-800">Product Images</h3>
+                    <div id="image-section" class="space-y-4">
+                        {% for image_form in image_formset %}
+                            <div class="p-4 border border-gray-300 rounded-lg bg-gray-50">
+                                {{ image_form.as_p }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button type="button" class="mt-4 inline-flex items-center px-4 py-2 bg-black border border-transparent rounded-md font-semibold text-white hover:bg-gray-800 focus:outline-none" onclick="addImage()">+ Add Product Image</button>
+                </div>
+    
+                <button type="submit" class="mt-8 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black">Add Product</button>
+            </form>
+        </div>
         
         <script>
           // JavaScript to add color variants dynamically
@@ -462,27 +482,31 @@
           }
 
     // Get all forms with class "verify-seller-form"
-    const verifySellerForms = document.querySelectorAll('.verify-seller-form');
-
-    verifySellerForms.forEach(form => {
-        // Find the corresponding button inside each form
-        const verifySellerBtn = form.querySelector('.verify-seller-btn');
-
-        // Check if the button needs to be disabled
-        const isVerified = form.parentElement.classList.contains('table-success');
-        if (isVerified) {
-            // If seller is verified, disable the button
-            verifySellerBtn.disabled = true;
-            verifySellerBtn.classList.add('disabled');
-        }
-
-        // Add event listener to prevent form submission when the button is disabled
-        verifySellerBtn.addEventListener('click', function(event) {
-            if (verifySellerBtn.disabled) {
-                event.preventDefault(); // Prevent form submission
-            }
-        });
-    });
+    document.addEventListener('DOMContentLoaded', function () {
+      // Get all forms with class "verify-seller-form"
+      const verifySellerForms = document.querySelectorAll('.verify-seller-form');
+  
+      verifySellerForms.forEach(form => {
+          // Find the corresponding button inside each form
+          const verifySellerBtn = form.querySelector('.verify-seller-btn');
+  
+          // Check if the button needs to be disabled
+          const isVerified = form.closest('tr').classList.contains('table-success');
+          if (isVerified) {
+              // If seller is verified, disable the button
+              verifySellerBtn.disabled = true;
+              verifySellerBtn.classList.add('disabled');
+          }
+  
+          // Add event listener to prevent form submission when the button is disabled
+          verifySellerBtn.addEventListener('click', function (event) {
+              if (verifySellerBtn.disabled) {
+                  event.preventDefault(); // Prevent form submission
+              }
+          });
+      });
+  });
+  
 
         </script>               
 
@@ -504,7 +528,7 @@
 
 
 <!-- Display existing coupons -->
-<h3>Existing Coupons</h3>
+<h3 class="s">Existing Coupons</h3>
 <table class="table">
     <thead>
         <tr>
@@ -535,7 +559,7 @@
       
 
 
-<h2>Manage Coupons</h2>
+<h2 class="s">Manage Coupons</h2>
 <!-- Button to trigger popup -->
 <button type="button" class="btn btn-primary suman" id="addCouponBtn">Add Coupon</button>
 
@@ -891,10 +915,19 @@ addSellerForm.addEventListener("submit", function(event) {
     position: center;
   } 
 
-  .suman{
+  .suman h1{
     margin-top: 108px;
-    margin-left: -243px;
+    margin-left: 6px;
+    
   }
+.table{
+  width: 88%;
+}
+.s{
+  margin-left: 45px;
+}
+
+
 </style>
 </body>
 </html>

@@ -69,14 +69,12 @@ def admin_dashboard(request):
     sellers = Seller.objects.all()
 
     if request.method == 'POST':
-        # Check if the request is for verifying a seller
-        if 'verify_seller' in request.POST:
-            seller_id = request.POST.get('seller_id')
+        seller_id = request.POST.get('seller_id')
+        if seller_id:
             seller = Seller.objects.get(pk=seller_id)
             seller.is_verified = True
             seller.save()
-            # Redirect to avoid resubmission
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER')) 
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     # Fetch all orders
     orders = Order.objects.all()
     
@@ -297,7 +295,7 @@ def seller_registration(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Registration successful. You can now login.')
-            return redirect('seller_login')  # Assuming 'seller_login' is the name of your login URL
+            return redirect('seller_login')  
         else:
             messages.error(request, 'Form submission failed. Please correct errors.')
     else:
