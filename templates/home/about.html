@@ -1,0 +1,142 @@
+{% extends 'base/base.html'%}
+
+
+{% block start %}
+
+<section class="about-section">
+            <div class="container">
+                <h1>About Us</h1>
+                <p1>Welcome to Lugaa, where innovation meets user experience.<br>
+                     At Lugaa, we are dedicated to providing a seamless and intuitive platform designed to enhance your online journey.<br> Our mission is to inspire creativity, foster collaboration, and deliver high-quality tools and resources that empower our community.</p1>
+                     <br>
+                <h2>Our Mission</h2>
+                <li> Enhance User Experience: </li>
+                <li> Promote Innovation and Creativity:</li>
+                <li> Foster Community and Collaboration:</li>
+                <br>
+                <br>
+
+        
+                <h2>Our Team</h2>
+                <div class="team horizontal">
+                    <div class="team-member">
+                        <img src="unnamed.jpg" alt="Team Member">
+                        <h3>Member 1</h3>
+                        <p>Project Manager</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="unnamed.jpg" alt="Team Member">
+                        <h3>Member2</h3>
+                        <p>Developer</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="unnamed.jpg" alt="Team Member">
+                        <h3>Member 3</h3>
+                        <p>Developer</p>
+                    </div>
+                </div>
+          
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Lugaa Website</p>
+    </footer>
+</body>
+</html>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .p1{
+        color: black;
+    }
+    body {
+        font-family: 'Arial', sans-serif;
+        line-height: 1.6;
+    }
+    
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+    
+    ul {
+        list-style: none;
+    }
+    
+    /* Navbar styles */
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #090909;
+        padding: 1rem 2rem;
+    }
+    
+    .navbar .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #fff;
+    }
+    
+    .navbar .nav-links {
+        display: flex;
+        gap: 1.5rem;
+    }
+    
+    .navbar .nav-links li {
+        display: inline;
+    }
+    
+    .navbar .nav-links a {
+        color: #fff;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+    
+    
+    /* About section styles */
+    .about-section {
+        padding: 3rem 1rem; /* Corrected padding */
+        background-color: #f9f9f9; /* Added background color */
+    }
+    
+    .team.horizontal {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .team.horizontal .team-member {
+        flex: 0 0 auto;
+        text-align: center;
+        background-color: #fff; /* Added background color for team members */
+        padding: 1.5rem;
+        border-radius: 8px; /* Added border radius */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Added box shadow */
+    }
+    
+    .team.horizontal .team-member img {
+        width: 150px;
+        height: auto;
+        margin-bottom: 10px;
+        border-radius: 50%; /* Rounded image */
+    }
+    
+    .team.horizontal .team-member h3 {
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+    
+    .team.horizontal .team-member p {
+        font-size: 14px;
+        margin: 0;
+        color: #777; /* Added color for member positions */
+    }
+</style>
+{% endblock %}

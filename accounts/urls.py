@@ -15,5 +15,8 @@ urlpatterns = [
   path('checkout/', checkout, name='checkout'),
   path('profile/', user_profile, name='user_profile'),
   path('logout/', logout_user, name='logout_user'),
-  path('cancel-order/<int:order_id>/', cancel_order, name='cancel_order'),  # URL for canceling an order
+  path('cancel-order/<int:order_id>/', cancel_order, name='cancel_order'),
 ]
+
+
+
